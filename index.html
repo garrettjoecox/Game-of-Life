@@ -2,12 +2,26 @@
 <html>
   <head>
     <title>Game of Life+</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   <body>
-    <canvas id="main"></canvas>
+    <div class="sidebar hidden">
+    </div>
+    <div class="outerButtonContainer">
+      <div class="innerButtonContainer">
+        <a class="fa fa-cog fa-2x"></a>
+      </div>
+    </div>
+    <canvas id="canvas"></canvas>
     <script src="gol.js"></script>
     <script>
+
+      document.querySelector('.innerButtonContainer').addEventListener('click', function() {
+        document.querySelector('.sidebar').classList.toggle('hidden');
+        document.querySelector('.innerButtonContainer').classList.toggle('open');
+      });
+
       var options = {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -19,7 +33,7 @@
         cellColor: '#FFF'
       };
 
-      var gol = new GoL(options, '#main');
+      var gol = new GoL(options, '#canvas');
     </script>
   </body>
 </html>

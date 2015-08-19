@@ -1,12 +1,61 @@
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
 html, body {
   margin: 0;
   min-height: 100vh;
   min-width: 100vw;
   padding: 0;
   background-color: #222;
+  font-family: "Open Sans";
 }
 
 body {
   overflow: hidden;
+  display: flex;
+}
+
+.sidebar {
+  z-index: 100;
+  width: 150px;
+  transition: width 250ms ease;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+.sidebar.hidden {
+  transition: width 250ms ease;
+  width: 0px;
+}
+
+.outerButtonContainer {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+.innerButtonContainer {
+  z-index: 100;
+  display: flex;
+  color: #BBB;
+  transition: all 250ms ease;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  border-radius: 0 0 5px 0;
+}
+
+.innerButtonContainer:hover, .innerButtonContainer.open {
+  color: #333;
+  transition: all 250ms ease;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+#canvas {
+  cursor: pointer;
+  z-index: 99;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
