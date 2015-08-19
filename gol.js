@@ -13,8 +13,8 @@ class GoL {
     self.canvasElement.setAttribute('width', options.width);
     self.canvasElement.setAttribute('height', options.height);
     self.context = self.canvasElement.getContext('2d');
+    self.options.rgb = hexToRgb(options.cellColor);
     self.context.strokeStyle = options.gridColor;
-    self.context.fillStyle = options.cellColor;
     self.cells = [];
 
     if (self.options.interactive) {
@@ -65,7 +65,7 @@ class GoL {
         var count = countNeighbours(x, y);
 
         if (cell) {
-          alive = count === 2 || count === 3 ? 1 : 0;
+          alive = count === 2 || count === 3 ? cell + 1 : 0;
         } else {
           alive = count === 3 ? 1 : 0;
         }
@@ -103,7 +103,14 @@ class GoL {
       row.forEach(function(cell, y) {
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-        if (cell) self.context.fill();
+        if (cell) {
+          if (self.options.opacity) {
+            self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell * 0.1) + ')';
+          } else {
+            self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
+          }
+          self.context.fill();
+        }
         else self.context.stroke();
       });
     });
@@ -127,6 +134,11 @@ class GoL {
         self.context.stroke();
       } else {
         self.cells[x][y] = 1;
+        if (self.options.opacity) {
+          self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
+        } else {
+          self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
+        }
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.fill();
@@ -141,9 +153,27 @@ class GoL {
     y = Math.floor(y/self.options.cellSize);
     if (self.cells[x] && self.cells[x][y] !== undefined) {
       self.cells[x][y] = 1;
+      if (self.options.opacity) {
+        self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
+      } else {
+        self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
+      }
       self.context.beginPath();
       self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
       self.context.fill();
     }
   }
+}
+
+function hexToRgb(hex) {
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
 }
