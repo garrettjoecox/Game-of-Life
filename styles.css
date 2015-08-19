@@ -2,58 +2,98 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans);
 
 html, body {
+  background-color: #222;
+  font-family: "Open Sans";
   margin: 0;
   min-height: 100vh;
   min-width: 100vw;
   padding: 0;
-  background-color: #222;
-  font-family: "Open Sans";
 }
 
 body {
   overflow: hidden;
-  display: flex;
 }
 
 .sidebar {
-  z-index: 100;
-  width: 150px;
-  transition: width 250ms ease;
   background-color: rgba(255, 255, 255, 0.75);
-}
-
-.sidebar.hidden {
-  transition: width 250ms ease;
-  width: 0px;
-}
-
-.outerButtonContainer {
-  flex: 1;
   display: flex;
-  align-items: flex-start;
-}
+  flex-flow: column;
+  min-height: 100vh;
+  min-width: 150px;
 
-.innerButtonContainer {
+  left: -150px;
+  position: absolute;
+  top: 0;
   z-index: 100;
-  display: flex;
-  color: #BBB;
+
   transition: all 250ms ease;
+}
+
+.sidebar.open {
+  left: 0;
+
+  transition: all 250ms ease;
+}
+
+.sidebar .controls {
+  display: flex;
+  flex-flow: row;
+  text-align: center;
   align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  border-radius: 0 0 5px 0;
+
+  flex: 0 0 50px;
 }
 
-.innerButtonContainer:hover, .innerButtonContainer.open {
+.sidebar .controls .playButton {
   color: #333;
+  cursor: pointer;
+  flex: 1;
+}
+
+.sidebarButtonContainer {
+  align-items: center;
+  color: #BBB;
+  cursor: pointer;
+  display: flex;
+  min-width: 45px;
+  min-height: 45px;
+  text-align: center;
+  border-radius: 0 0 10px 0;
+
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 100;
+
   transition: all 250ms ease;
+}
+
+.sidebarButtonContainer.open {
+  left: 150px;
+
+  transition: all 250ms ease;
+}
+
+.sidebarButtonContainer:hover, .sidebarButtonContainer.open {
+  color: #333;
   background-color: rgba(255, 255, 255, 0.75);
+}
+
+.sidebarButtonContainer .sidebarButton {
+  flex: 1;
+
+  transition: transform 250ms ease;
+}
+
+.sidebarButtonContainer:hover .sidebarButton, .sidebarButtonContainer.open .sidebarButton {
+  transform: rotate(25deg);
+
+  transition: transform 250ms ease;
 }
 
 #canvas {
   cursor: pointer;
+
   z-index: 99;
   position: absolute;
   left: 0;

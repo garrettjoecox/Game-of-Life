@@ -6,22 +6,17 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   <body>
-    <div class="sidebar hidden">
-    </div>
-    <div class="outerButtonContainer">
-      <div class="innerButtonContainer">
-        <a class="fa fa-cog fa-2x"></a>
+    <div class="sidebar">
+      <div class="controls">
+        <a class="playButton fa fa-pause fa-2x"></a>
       </div>
+    </div>
+    <div class="sidebarButtonContainer">
+      <a class="sidebarButton fa fa-cog fa-2x"></a>
     </div>
     <canvas id="canvas"></canvas>
     <script src="gol.js"></script>
     <script>
-
-      document.querySelector('.innerButtonContainer').addEventListener('click', function() {
-        document.querySelector('.sidebar').classList.toggle('hidden');
-        document.querySelector('.innerButtonContainer').classList.toggle('open');
-      });
-
       var options = {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -29,11 +24,31 @@
         speed: 10,
         cellSize: 10,
         opacity: true,
+        play: true,
         gridColor: '#272727',
         cellColor: '#FFF'
       };
-
       var gol = new GoL(options, '#canvas');
+
+      setInterval(function() {
+        if (options.play) gol.step();
+      }, options.speed);
+
+      var $ = function(el) { return document.querySelector(el); }
+      EventTarget.prototype.on = function(event, callback) {
+        this.addEventListener(event, callback);
+      }
+
+      $('.sidebarButtonContainer').on('click', function() {
+        $('.sidebar').classList.toggle('open');
+        $('.sidebarButtonContainer').classList.toggle('open');
+      });
+
+      $('.playButton').on('click', function() {
+        options.play = !options.play;
+        this.classList.toggle('fa-pause');
+        this.classList.toggle('fa-play');
+      });
     </script>
   </body>
 </html>

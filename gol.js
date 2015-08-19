@@ -58,14 +58,14 @@ class GoL {
 
     function countNeighbours(x, y) {
       var count = 0;
+      if (isFilled(x-1, y  )) count++; // Left
       if (isFilled(x-1, y-1)) count++;
-      if (isFilled(x,   y-1)) count++;
+      if (isFilled(x,   y-1)) count++; // Above
       if (isFilled(x+1, y-1)) count++;
-      if (isFilled(x-1, y  )) count++;
-      if (isFilled(x+1, y  )) count++;
-      if (isFilled(x-1, y+1)) count++;
-      if (isFilled(x,   y+1)) count++;
+      if (isFilled(x+1, y  )) count++; // Right
       if (isFilled(x+1, y+1)) count++;
+      if (isFilled(x,   y+1)) count++; // Below
+      if (isFilled(x-1, y+1)) count++;
       return count;
     }
     function isFilled(x, y) {
@@ -89,10 +89,6 @@ class GoL {
         else self.context.stroke();
       });
     });
-
-    setTimeout(function() {
-      self.step();
-    }, self.options.speed);
   }
 
   toggleCell(x, y, canRemove) {
