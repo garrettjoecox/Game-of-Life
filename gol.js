@@ -17,28 +17,7 @@ class GoL {
     self.context.strokeStyle = options.gridColor;
     self.cells = [];
 
-    if (self.options.interactive) {
-      self.canvasElement.addEventListener('mousedown', function() {
-        self.mouseMoved = false;
-        self.canvasElement.onmousemove = mouseMove;
-      })
-      self.canvasElement.addEventListener('mouseup', function() {
-        self.canvasElement.onmousemove = null;
-      });
-      self.canvasElement.addEventListener('click', function(e) {
-        if (!self.mouseMoved) {
-          self.click(e.x, e.y)
-        }
-      });
-      function mouseMove(e) {
-        if (!e.buttons) {
-          self.canvasElement.onmousemove = null;
-          return;
-        }
-        self.mouseMoved = true;
-        self.drag(e.x, e.y);
-      }
-    }
+    if (self.options.interactive) self.bindMouseEvents();
 
     for (var i = 0; i < w; i++) {
       self.cells[i] = [];
@@ -104,11 +83,7 @@ class GoL {
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         if (cell) {
-          if (self.options.opacity) {
-            self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell * 0.1) + ')';
-          } else {
-            self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
-          }
+          self.context.fillStyle = self.getColor(cell);
           self.context.fill();
         }
         else self.context.stroke();
@@ -120,25 +95,21 @@ class GoL {
     }, self.options.speed);
   }
 
-  click(x, y) {
+  toggleCell(x, y, canRemove) {
     var self = this;
 
     x = Math.floor(x/self.options.cellSize);
     y = Math.floor(y/self.options.cellSize);
     if (self.cells[x] && self.cells[x][y] !== undefined) {
-      if (self.cells[x][y] === 1) {
+      if (self.cells[x][y] > 0 && canRemove) {
         self.cells[x][y] = 0;
         self.context.clearRect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.stroke();
-      } else {
+      } else if (self.cells[x][y] === 0){
         self.cells[x][y] = 1;
-        if (self.options.opacity) {
-          self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
-        } else {
-          self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
-        }
+        self.context.fillStyle = self.getColor();
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.fill();
@@ -146,21 +117,38 @@ class GoL {
     }
   }
 
-  drag(x, y) {
+  bindMouseEvents() {
+    var self = this;
+    
+    self.canvasElement.addEventListener('mousedown', function() {
+      self.mouseMoved = false;
+      self.canvasElement.onmousemove = function(e) {
+        if (!e.buttons) {
+          self.canvasElement.onmousemove = null;
+          return;
+        }
+        self.mouseMoved = true;
+        self.toggleCell(e.x, e.y);
+      };
+    })
+    self.canvasElement.addEventListener('mouseup', function() {
+      self.canvasElement.onmousemove = null;
+    });
+    self.canvasElement.addEventListener('click', function(e) {
+      if (!self.mouseMoved) {
+        self.toggleCell(e.x, e.y, true)
+      }
+    });
+  }
+
+  getColor(cell) {
     var self = this;
 
-    x = Math.floor(x/self.options.cellSize);
-    y = Math.floor(y/self.options.cellSize);
-    if (self.cells[x] && self.cells[x][y] !== undefined) {
-      self.cells[x][y] = 1;
-      if (self.options.opacity) {
-        self.context.fillStyle = 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
-      } else {
-        self.context.fillStyle = 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
-      }
-      self.context.beginPath();
-      self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-      self.context.fill();
+    if (self.options.opacity) {
+      if (cell) return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell * 0.1) + ')';
+      else return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
+    } else {
+      return 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
     }
   }
 }
