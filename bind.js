@@ -123,6 +123,15 @@ if (gol.options.opacity) {
   $('#opacity').classList.toggle('active');
 }
 
+$('#colors').on('click', function() {
+  gol.options.inheritColors = !gol.options.inheritColors;
+  this.classList.toggle('active');
+});
+
+if (gol.options.inheritColors) {
+  $('#colors').classList.toggle('active');
+}
+
 $('#interactive').on('click', function() {
   gol.options.interactive = !gol.options.interactive;
   this.classList.toggle('active');
