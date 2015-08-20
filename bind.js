@@ -148,6 +148,6 @@ $('#save').on('click', function() {
   gol.save();
 });
 
-$('#default').on('click', function() {
-  gol.default();
+$('#defaults').on('click', function() {
+  gol.defaults();
 });

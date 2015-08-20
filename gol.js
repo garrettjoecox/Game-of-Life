@@ -60,7 +60,7 @@ class GoL {
     localStorage.cells = JSON.stringify(self.cells)
   }
 
-  default() {
+  defaults() {
     var self = this;
 
     localStorage.removeItem('cells');
