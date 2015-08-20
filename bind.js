@@ -85,3 +85,23 @@ $('#addCellSize').on('click', function() {
 $('#cellColor').on('change', function() {
   gol.options.rgb = hexToRgb(this.value);
 }).value = gol.options.cellColor;
+
+$('#opacity').on('click', function() {
+  gol.options.opacity = !gol.options.opacity;
+  this.classList.toggle('active');
+});
+
+if (gol.options.opacity) {
+  $('#opacity').classList.toggle('active');
+}
+
+$('#interactive').on('click', function() {
+  gol.options.interactive = !gol.options.interactive;
+  this.classList.toggle('active');
+  $('#canvas').classList.toggle('pointer');
+});
+
+if (gol.options.interactive) {
+  $('#interactive').classList.toggle('active');
+  $('#canvas').classList.toggle('pointer');
+}

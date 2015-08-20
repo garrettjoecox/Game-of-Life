@@ -15,8 +15,7 @@ class GoL {
     self.options.rgb = hexToRgb(self.options.cellColor);
     self.context.strokeStyle = self.options.gridColor;
 
-    if (self.options.interactive) self.bindMouseEvents();
-
+    self.bindMouseEvents();
     self.init();
 
     (function c() {
@@ -140,6 +139,7 @@ class GoL {
     var self = this;
 
     self.canvasElement.addEventListener('mousedown', function() {
+      if (!self.options.interactive) return;
       self.mouseMoved = false;
       self.canvasElement.onmousemove = function(e) {
         if (!e.buttons) {
@@ -151,9 +151,11 @@ class GoL {
       };
     })
     self.canvasElement.addEventListener('mouseup', function() {
+      if (!self.options.interactive) return;
       self.canvasElement.onmousemove = null;
     });
     self.canvasElement.addEventListener('click', function(e) {
+      if (!self.options.interactive) return;
       if (!self.mouseMoved) {
         self.toggleCell(e.x, e.y, true)
       }

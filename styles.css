@@ -82,12 +82,14 @@ body {
 }
 
 #canvas {
-  cursor: pointer;
-
   z-index: 99;
   position: absolute;
   left: 0;
   top: 0;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .flexColumn {
