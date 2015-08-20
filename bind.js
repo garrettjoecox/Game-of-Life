@@ -133,3 +133,11 @@ if (gol.options.interactive) {
   $('#interactive').classList.toggle('active');
   $('#canvas').classList.toggle('pointer');
 }
+
+$('#save').on('click', function() {
+  gol.save();
+});
+
+$('#defaults').on('click', function() {
+  gol.defaults();
+});

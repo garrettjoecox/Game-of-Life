@@ -2,7 +2,7 @@
 
 class GoL {
 
-  constructor(options, id, preset) {
+  constructor(options, id) {
     var self = this;
 
     self.options = JSON.parse(JSON.stringify(options));
@@ -36,8 +36,11 @@ class GoL {
       }
     }
 
-    if (preset) {
-      preset.forEach(function(coord) {
+    if (localStorage.options && localStorage.cells) {
+      self.options = JSON.parse(localStorage.options);
+      self.cells = JSON.parse(localStorage.cells);
+    } else if (self.options.preset) {
+      self.options.preset.forEach(function(coord) {
         if (self.cells[coord[0]] && self.cells[coord[0]][coord[1]]) {
           self.cells[coord[0]][coord[1]] = {
             life: 1,
@@ -50,6 +53,21 @@ class GoL {
     }
 
     self.render();
+  }
+
+  save() {
+    var self = this;
+
+    localStorage.options = JSON.stringify(self.options)
+    localStorage.cells = JSON.stringify(self.cells)
+  }
+
+  defaults() {
+    var self = this;
+    localStorage.removeItem('options');
+    localStorage.removeItem('cells');
+    self.options = defaults;
+    self.init();
   }
 
   step() {
