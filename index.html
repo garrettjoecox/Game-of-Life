@@ -6,56 +6,73 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   <body>
-    <div class="sidebar">
-      <div class="sidebartitle"></div>
-      <div class="controls">
-        <a class="playButton fa fa-pause fa-2x"></a>
+    <div class="config">
+      <div class="flexRow">
+        <input id="stateButton" class="btn blendRight" type="button" value="Pause">
+        <input id="resetButton" class="btn blendLeft" type="button" value="Reset">
       </div>
-      <input id="speed" type="range">
+      <div class="flexColumn">
+        <div class="title">Tick Length</div>
+        <input id="speed" type="range" min="1" max="1000">
+      </div>
+      <div class="flexColumn">
+        <div class="title">Width</div>
+        <div class="flexRow">
+          <input id="minusWidth" class="btn blendRight" type="button" value="-">
+          <input id="width" class="input" type="text">
+          <input id="addWidth" class="btn blendLeft" type="button" value="+">
+        </div>
+      </div>
+      <div class="flexColumn">
+        <div class="title">Height</div>
+        <div class="flexRow">
+          <input id="minusHeight" class="btn blendRight" type="button" value="-">
+          <input id="height" class="input" type="text">
+          <input id="addHeight" class="btn blendLeft" type="button" value="+">
+        </div>
+      </div>
+      <div class="flexColumn">
+        <div class="title">Cell Size</div>
+        <div class="flexRow">
+          <input id="minusCellSize" class="btn blendRight" type="button" value="-">
+          <input id="cellSize" class="input" type="text">
+          <input id="addCellSize" class="btn blendLeft" type="button" value="+">
+        </div>
+      </div>
+      <div class="flexColumn">
+        <div class="title">Cell Color</div>
+        <input id="cellColor" class="input round" type="text">
+      </div>
+      <div class="flexRow">
+        <input id="opacity" class="btn blendRight" type="button" value="Opacity">
+        <input id="colors" class="btn" type="button" value="Colors">
+        <input id="interactive" class="btn blendLeft" type="button" value="Mouse">
+      </div>
     </div>
-    <div class="sidebarButtonContainer">
-      <a class="sidebarButton fa fa-cog fa-2x"></a>
+    <div class="configButtonContainer">
+      <a class="configButton fa fa-cog fa-2x"></a>
     </div>
     <canvas id="canvas"></canvas>
     <script src="gol.js"></script>
     <script>
-      var options = {
+
+      var preset = [[1, 5],[1, 6],[2, 5],[2, 6],[11, 5],[11, 6],[11, 7],[12, 4],[12, 8],[13, 3],[13, 9],[14, 3],[14, 9],[15, 6],[16, 4],[16, 8],[17, 5],[17, 6],[17, 7],[18, 6],[21, 3],[21, 4],[21, 5],[22, 3],[22, 4],[22, 5],[23, 2],[23, 6],[25, 1],[25, 2],[25, 6],[25, 7],[35, 3],[35, 4],[36, 3],[36, 4]];
+      var defaults = {
         width: window.innerWidth,
         height: window.innerHeight,
         interactive: true,
-        speed: 100,
+        speed: 500,
         cellSize: 10,
         opacity: true,
-        play: true,
+        state: 'Play',
+        inheritColors: false,
         gridColor: '#272727',
         cellColor: '#FFF'
       };
-      var gol = new GoL(options, '#canvas');
 
-      (function clock() {
-        if (options.play) gol.step();
-        setTimeout(clock, options.speed);
-      })();
+      var gol = new GoL(defaults, '#canvas', preset);
 
-      var $ = function(el) { return document.querySelector(el); }
-      EventTarget.prototype.on = function(event, callback) {
-        this.addEventListener(event, callback);
-      }
-
-      $('.sidebarButtonContainer').on('click', function() {
-        $('.sidebar').classList.toggle('open');
-        $('.sidebarButtonContainer').classList.toggle('open');
-      });
-
-      $('.playButton').on('click', function() {
-        options.play = !options.play;
-        this.classList.toggle('fa-pause');
-        this.classList.toggle('fa-play');
-      });
-
-      $('#speed').on('input', function(e) {
-        options.speed = this.value * 2;
-      });
     </script>
+    <script src="bind.js"></script>
   </body>
 </html>

@@ -14,14 +14,15 @@ body {
   overflow: hidden;
 }
 
-.sidebar {
-  background-color: rgba(255, 255, 255, 0.75);
+.config {
+  background-color: white;
+  padding: 20px;
   display: flex;
   flex-flow: column;
-  min-height: 100vh;
   min-width: 150px;
+  border-radius: 0 0 10px 0;
 
-  left: -150px;
+  left: -190px;
   position: absolute;
   top: 0;
   z-index: 100;
@@ -29,32 +30,17 @@ body {
   transition: all 250ms ease;
 }
 
-.sidebar.open {
+.config > * {
+  margin: 5px 0;
+}
+
+.config.open {
   left: 0;
 
   transition: all 250ms ease;
 }
 
-.sidebar .controls {
-  display: flex;
-  flex-flow: row;
-  text-align: center;
-  align-items: center;
-
-  flex: 0 0 50px;
-}
-
-.sidebar .controls .playButton {
-  color: #333;
-  cursor: pointer;
-  flex: 1;
-}
-
-.sidebar #speed {
-  transform: rotate(180deg);
-}
-
-.sidebarButtonContainer {
+.configButtonContainer {
   align-items: center;
   color: #BBB;
   cursor: pointer;
@@ -72,24 +58,24 @@ body {
   transition: all 250ms ease;
 }
 
-.sidebarButtonContainer.open {
-  left: 150px;
+.configButtonContainer.open {
+  left: 190px;
 
   transition: all 250ms ease;
 }
 
-.sidebarButtonContainer:hover, .sidebarButtonContainer.open {
+.configButtonContainer:hover, .configButtonContainer.open {
   color: #333;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: white;
 }
 
-.sidebarButtonContainer .sidebarButton {
+.configButtonContainer .configButton {
   flex: 1;
 
   transition: transform 250ms ease;
 }
 
-.sidebarButtonContainer:hover .sidebarButton, .sidebarButtonContainer.open .sidebarButton {
+.configButtonContainer:hover .configButton, .configButtonContainer.open .configButton {
   transform: rotate(25deg);
 
   transition: transform 250ms ease;
@@ -102,4 +88,65 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+}
+
+.flexColumn {
+  display: flex;
+  flex-flow: column nowrap;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.flexRow {
+  max-width: 150px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.flexRow *, .flexColumn * {
+  flex: 1;
+}
+
+.title {
+  font-weight: bold;
+  color: #333;
+}
+
+input.input {
+  height: 16px;
+  outline: none;
+  border: 1px solid #BBB;
+  text-align: center;
+}
+
+input.input.round {
+  border-radius: 4px;
+}
+
+.btn {
+  cursor: pointer;
+  border: 1px solid #BBB;
+  background-color: white;
+  outline: none;
+}
+
+.btn:hover {
+  background-color: #DDD;
+}
+
+.btn:active, .btn.active {
+  background-color: #BBB;
+}
+
+.blendRight {
+  border-radius: 4px 0 0 4px;
+}
+
+.blendLeft {
+  border-radius: 0 4px 4px 0;
 }

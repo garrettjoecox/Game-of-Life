@@ -2,35 +2,53 @@
 
 class GoL {
 
-  constructor(options, id) {
+  constructor(options, id, preset) {
     var self = this;
-    var w = (options.width) / options.cellSize;
-    var h = (options.height) / options.cellSize;
-    var prefilled = [[1, 5],[1, 6],[2, 5],[2, 6],[11, 5],[11, 6],[11, 7],[12, 4],[12, 8],[13, 3],[13, 9],[14, 3],[14, 9],[15, 6],[16, 4],[16, 8],[17, 5],[17, 6],[17, 7],[18, 6],[21, 3],[21, 4],[21, 5],[22, 3],[22, 4],[22, 5],[23, 2],[23, 6],[25, 1],[25, 2],[25, 6],[25, 7],[35, 3],[35, 4],[36, 3],[36, 4]];
 
-    self.options = options;
+    self.options = JSON.parse(JSON.stringify(options));
     self.canvasElement = document.querySelector(id);
-    self.canvasElement.setAttribute('width', options.width);
-    self.canvasElement.setAttribute('height', options.height);
+    self.canvasElement.setAttribute('width', self.options.width);
+    self.canvasElement.setAttribute('height', self.options.height);
     self.context = self.canvasElement.getContext('2d');
-    self.options.rgb = hexToRgb(options.cellColor);
-    self.context.strokeStyle = options.gridColor;
-    self.cells = [];
+    self.options.wCells = Math.floor((options.width - options.cellSize) / options.cellSize);
+    self.options.hCells = Math.floor((options.height - options.cellSize) / options.cellSize);
+    self.options.rgb = hexToRgb(self.options.cellColor);
+    self.context.strokeStyle = self.options.gridColor;
 
     if (self.options.interactive) self.bindMouseEvents();
 
-    for (var i = 0; i < w; i++) {
+    self.init();
+
+    (function c() {
+      if (self.options.state === 'Play') self.step();
+      setTimeout(c, self.options.speed);
+    })();
+  }
+
+  init() {
+
+    var self = this;
+    self.cells = [];
+
+    for (var i = 0; i < self.options.wCells; i++) {
       self.cells[i] = [];
-      for (var j = 0; j < h; j++) {
-        self.cells[i][j] = 0;
+      for (var j = 0; j < self.options.hCells; j++) {
+        self.cells[i][j] = {life: 0};
       }
     }
 
-    prefilled.forEach(function(coord) {
-      self.cells[coord[0]][coord[1]] = 1;
-    });
+    if (preset) {
+      preset.forEach(function(coord) {
+        self.cells[coord[0]][coord[1]] = {
+          life: 1,
+          r: self.options.rgb.r,
+          g: self.options.rgb.g,
+          b: self.options.rgb.b,
+        };
+      });
+    }
 
-    self.step();
+    self.render();
   }
 
   step() {
@@ -40,13 +58,13 @@ class GoL {
     self.cells.forEach(function(row, x) {
       newCells[x] = [];
       row.forEach(function(cell, y) {
-        var alive = 0;
+        var alive = {life: 0};
         var count = countNeighbours(x, y);
 
-        if (cell) {
-          alive = count === 2 || count === 3 ? cell + 1 : 0;
+        if (cell.life) {
+          alive.life = count === 2 || count === 3 ? cell.life + 1 : 0;
         } else {
-          alive = count === 3 ? 1 : 0;
+          alive.life = count === 3 ? 1 : 0;
         }
 
         newCells[x][y] = alive;
@@ -69,7 +87,7 @@ class GoL {
       return count;
     }
     function isFilled(x, y) {
-      return self.cells[x] && self.cells[x][y];
+      return self.cells[x] && self.cells[x][y] && self.cells[x][y].life;
     }
   }
 
@@ -82,7 +100,7 @@ class GoL {
       row.forEach(function(cell, y) {
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-        if (cell) {
+        if (cell.life) {
           self.context.fillStyle = self.getColor(cell);
           self.context.fill();
         }
@@ -97,15 +115,20 @@ class GoL {
     x = Math.floor(x/self.options.cellSize);
     y = Math.floor(y/self.options.cellSize);
     if (self.cells[x] && self.cells[x][y] !== undefined) {
-      if (self.cells[x][y] > 0 && canRemove) {
-        self.cells[x][y] = 0;
+      if (self.cells[x][y].life > 0 && canRemove) {
+        self.cells[x][y] = { life: 0 };
         self.context.clearRect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.stroke();
-      } else if (self.cells[x][y] === 0){
-        self.cells[x][y] = 1;
-        self.context.fillStyle = self.getColor();
+      } else if (self.cells[x][y].life === 0){
+        self.cells[x][y] = {
+          life: 1,
+          r: self.options.rgb.r,
+          g: self.options.rgb.g,
+          b: self.options.rgb.b,
+        };
+        self.context.fillStyle = self.getColor(self.cells[x][y]);
         self.context.beginPath();
         self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
         self.context.fill();
@@ -115,7 +138,7 @@ class GoL {
 
   bindMouseEvents() {
     var self = this;
-    
+
     self.canvasElement.addEventListener('mousedown', function() {
       self.mouseMoved = false;
       self.canvasElement.onmousemove = function(e) {
@@ -140,9 +163,12 @@ class GoL {
   getColor(cell) {
     var self = this;
 
-    if (self.options.opacity) {
-      if (cell) return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell * 0.1) + ')';
-      else return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ', 0.1)';
+    if (self.options.opacity && self.options.inheritColors) {
+      return 'rgba(' + cell.r + ',' + cell.g + ',' + cell.b + ',' + (cell.life * 0.1) + ')';
+    } else if (self.options.opacity) {
+      return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell.life * 0.1) + ')';
+    } else if (self.options.inheritColors) {
+      return 'rgb(' + cell.r + ',' + cell.g + ',' + cell.b + ')';
     } else {
       return 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
     }
