@@ -116,6 +116,7 @@ $('#cellColor').on('change', function() {
 
 $('#opacity').on('click', function() {
   gol.options.opacity = !gol.options.opacity;
+  gol.render();
   this.classList.toggle('active');
 });
 
