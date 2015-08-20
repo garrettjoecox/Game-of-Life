@@ -124,8 +124,14 @@ body.dark {
 }
 
 .title {
+  padding-bottom: 5px;
   font-weight: bold;
   color: #333;
+}
+
+.main.title {
+  align-self: center;
+  font-size: 1.4em;
 }
 
 input.input {

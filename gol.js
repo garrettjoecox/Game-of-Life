@@ -36,8 +36,7 @@ class GoL {
       }
     }
 
-    if (localStorage.options && localStorage.cells) {
-      self.options = JSON.parse(localStorage.options);
+    if (localStorage.cells) {
       self.cells = JSON.parse(localStorage.cells);
     } else if (self.options.preset) {
       self.options.preset.forEach(function(coord) {
@@ -58,15 +57,13 @@ class GoL {
   save() {
     var self = this;
 
-    localStorage.options = JSON.stringify(self.options)
     localStorage.cells = JSON.stringify(self.cells)
   }
 
-  defaults() {
+  default() {
     var self = this;
-    localStorage.removeItem('options');
+
     localStorage.removeItem('cells');
-    self.options = defaults;
     self.init();
   }
 

@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Game of Life+</title>
+    <title>Game of Life</title>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   <body class="dark">
     <div class="config">
-      <div class="flexRow">
-        <input id="stateButton" class="btn blendRight" type="button" value="Pause">
-        <input id="resetButton" class="btn blendLeft" type="button" value="Reset">
+      <div class="main title">Game of Life</div>
+      <div class="flexColumn">
+        <div class="title">Playback</div>
+        <div class="flexRow">
+          <input id="stateButton" class="btn blendRight" type="button" value="Pause">
+          <input id="resetButton" class="btn blendLeft" type="button" value="Reset">
+        </div>
       </div>
       <div class="flexColumn">
         <div class="title">Tick Length</div>
@@ -43,14 +47,20 @@
         <div class="title">Cell Color</div>
         <input id="cellColor" class="input round" type="text">
       </div>
-      <div class="flexRow">
-        <input id="opacity" class="btn blendRight" type="button" value="Opacity">
-        <input id="colors" class="btn" type="button" value="Colors">
-        <input id="interactive" class="btn blendLeft" type="button" value="Mouse">
+      <div class="flexColumn">
+        <div class="title">Toggles</div>
+        <div class="flexRow">
+          <input id="opacity" class="btn blendRight" type="button" value="Opacity">
+          <input id="colors" class="btn" type="button" value="Colors">
+          <input id="interactive" class="btn blendLeft" type="button" value="Mouse">
+        </div>
       </div>
-      <div class="flexRow">
-        <input id="save" class="btn blendRight" type="button" value="Save Preset">
-        <input id="defaults" class="btn blendLeft" type="button" value="Defaults">
+      <div class="flexColumn">
+        <div class="title">Preset</div>
+        <div class="flexRow">
+          <input id="save" class="btn blendRight" type="button" value="Save">
+          <input id="default" class="btn blendLeft" type="button" value="Default">
+        </div>
       </div>
     </div>
     <div class="configButtonContainer">
