@@ -7,9 +7,11 @@
   </head>
   <body>
     <div class="sidebar">
+      <div class="sidebartitle"></div>
       <div class="controls">
         <a class="playButton fa fa-pause fa-2x"></a>
       </div>
+      <input id="speed" type="range">
     </div>
     <div class="sidebarButtonContainer">
       <a class="sidebarButton fa fa-cog fa-2x"></a>
@@ -21,7 +23,7 @@
         width: window.innerWidth,
         height: window.innerHeight,
         interactive: true,
-        speed: 10,
+        speed: 100,
         cellSize: 10,
         opacity: true,
         play: true,
@@ -30,9 +32,10 @@
       };
       var gol = new GoL(options, '#canvas');
 
-      setInterval(function() {
+      (function clock() {
         if (options.play) gol.step();
-      }, options.speed);
+        setTimeout(clock, options.speed);
+      })();
 
       var $ = function(el) { return document.querySelector(el); }
       EventTarget.prototype.on = function(event, callback) {
@@ -48,6 +51,10 @@
         options.play = !options.play;
         this.classList.toggle('fa-pause');
         this.classList.toggle('fa-play');
+      });
+
+      $('#speed').on('input', function(e) {
+        options.speed = this.value * 2;
       });
     </script>
   </body>

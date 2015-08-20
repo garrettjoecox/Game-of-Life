@@ -50,6 +50,10 @@ body {
   flex: 1;
 }
 
+.sidebar #speed {
+  transform: rotate(180deg);
+}
+
 .sidebarButtonContainer {
   align-items: center;
   color: #BBB;
