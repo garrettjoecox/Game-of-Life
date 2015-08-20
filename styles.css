@@ -1,8 +1,6 @@
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans);
-
 html, body {
-  font-family: "Open Sans";
+  font-family: sans-serif;
   margin: 0;
   min-height: 100vh;
   min-width: 100vw;
@@ -47,7 +45,7 @@ body.dark {
 
 .configButtonContainer {
   align-items: center;
-  color: #BBB;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   display: flex;
   min-width: 45px;
@@ -124,14 +122,20 @@ body.dark {
 }
 
 .title {
+  font-size: 0.9em;
   padding-bottom: 5px;
-  font-weight: bold;
+  font-weight: 100;
   color: #333;
 }
 
 .main.title {
   align-self: center;
   font-size: 1.4em;
+}
+
+input {
+  font-weight: 100;
+  font-family: sans-serif;
 }
 
 input.input {
