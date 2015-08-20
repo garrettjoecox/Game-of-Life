@@ -34,6 +34,8 @@ $('#speed').on('input', function() {
 var $width = $('#width');
 
 $width.on('change', function() {
+  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
+  if (this.value > maxW) this.value = maxW;
   gol.options.wCells = this.value;
   gol.init();
 }).value = gol.options.wCells;
@@ -44,6 +46,8 @@ $('#minusWidth').on('click', function() {
 });
 
 $('#addWidth').on('click', function() {
+  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
+  if (+$width.value+1 > maxW) return;
   gol.options.wCells = $width.value = (+$width.value + 1);
   gol.init();
 });
@@ -51,6 +55,8 @@ $('#addWidth').on('click', function() {
 var $height = $('#height');
 
 $height.on('change', function() {
+  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+  if (this.value > maxH) this.value = maxH;
   gol.options.hCells = this.value;
   gol.init();
 }).value = gol.options.hCells;
@@ -61,6 +67,8 @@ $('#minusHeight').on('click', function() {
 });
 
 $('#addHeight').on('click', function() {
+  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+  if (+$height.value+1 > maxH) return;
   gol.options.hCells = $height.value = (+$height.value + 1);
   gol.init();
 });
@@ -69,6 +77,16 @@ var $size = $('#cellSize');
 
 $size.on('change', function() {
   gol.options.cellSize = this.value;
+  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
+  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+  if ($width.value > maxW) {
+    $width.value = maxW;
+    gol.options.wCells = $width.value;
+  }
+  if ($height.value > maxH) {
+    $height.value = maxH;
+    gol.options.hCells = $height.value;
+  }
   gol.init();
 }).value = gol.options.cellSize;
 
@@ -79,6 +97,16 @@ $('#minusCellSize').on('click', function() {
 
 $('#addCellSize').on('click', function() {
   gol.options.cellSize = $size.value = (+$size.value + 1);
+  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
+  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+  if ($width.value > maxW) {
+    $width.value = maxW;
+    gol.options.wCells = $width.value;
+  }
+  if ($height.value > maxH) {
+    $height.value = maxH;
+    gol.options.hCells = $height.value;
+  }
   gol.init();
 });
 

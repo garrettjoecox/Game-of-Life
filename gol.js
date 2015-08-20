@@ -10,8 +10,8 @@ class GoL {
     self.canvasElement.setAttribute('width', self.options.width);
     self.canvasElement.setAttribute('height', self.options.height);
     self.context = self.canvasElement.getContext('2d');
-    self.options.wCells = Math.floor((options.width - options.cellSize) / options.cellSize);
-    self.options.hCells = Math.floor((options.height - options.cellSize) / options.cellSize);
+    self.options.wCells = Math.floor(options.width / options.cellSize);
+    self.options.hCells = Math.floor(options.height / options.cellSize);
     self.options.rgb = hexToRgb(self.options.cellColor);
     self.context.strokeStyle = self.options.gridColor;
 
@@ -38,12 +38,14 @@ class GoL {
 
     if (preset) {
       preset.forEach(function(coord) {
-        self.cells[coord[0]][coord[1]] = {
-          life: 1,
-          r: self.options.rgb.r,
-          g: self.options.rgb.g,
-          b: self.options.rgb.b,
-        };
+        if (self.cells[coord[0]] && self.cells[coord[0]][coord[1]]) {
+          self.cells[coord[0]][coord[1]] = {
+            life: 1,
+            r: self.options.rgb.r,
+            g: self.options.rgb.g,
+            b: self.options.rgb.b,
+          };
+        }
       });
     }
 
