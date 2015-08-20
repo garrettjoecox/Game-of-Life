@@ -140,6 +140,10 @@ body.dark {
   flex: 1;
 }
 
+.flexRow .input {
+  flex: 2;
+}
+
 .title {
   font-size: 0.9em;
   padding-bottom: 5px;
@@ -155,6 +159,7 @@ body.dark {
 input {
   font-weight: 100;
   font-family: sans-serif;
+  margin: 0;
 }
 
 input.input {
@@ -162,6 +167,9 @@ input.input {
   outline: none;
   border: 1px solid #BBB;
   text-align: center;
+  -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.1);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.1);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.1);
 }
 
 input.round {
@@ -189,8 +197,13 @@ input.round {
 
 .blendRight {
   border-radius: 4px 0 0 4px;
+  border-right: 0;
 }
 
 .blendLeft {
   border-radius: 0 4px 4px 0;
+}
+
+.blendLeft:nth-child(3) {
+  border-left: 0;
 }
