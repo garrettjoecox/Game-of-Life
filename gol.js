@@ -5,14 +5,16 @@ class GoL {
   constructor(options, id) {
     var self = this;
 
+    // Hacky, fix this.
     self.options = JSON.parse(JSON.stringify(options));
+
     self.canvasElement = document.querySelector(id);
     self.canvasElement.setAttribute('width', self.options.width);
     self.canvasElement.setAttribute('height', self.options.height);
     self.context = self.canvasElement.getContext('2d');
-    self.options.wCells = Math.floor(options.width / options.cellSize);
-    self.options.hCells = Math.floor(options.height / options.cellSize);
-    self.options.rgb = hexToRgb(self.options.cellColor);
+    self.options.widthCells = Math.floor(options.width / options.cellSize);
+    self.options.heightCells = Math.floor(options.height / options.cellSize);
+    self.options.brush = hexToRgb(self.options.cellColor);
     self.context.strokeStyle = self.options.gridColor;
 
     self.bindMouseEvents();
@@ -29,41 +31,63 @@ class GoL {
     var self = this;
     self.cells = [];
 
-    for (var i = 0; i < self.options.wCells; i++) {
+    for (var i = 0; i < self.options.widthCells; i++) {
       self.cells[i] = [];
-      for (var j = 0; j < self.options.hCells; j++) {
-        self.cells[i][j] = {life: 0};
+      for (var j = 0; j < self.options.heightCells; j++) {
+        self.cells[i][j] = { life: 0 };
       }
     }
 
-    if (localStorage.cells) {
-      self.cells = JSON.parse(localStorage.cells);
-    } else if (self.options.preset) {
-      self.options.preset.forEach(function(coord) {
-        if (self.cells[coord[0]] && self.cells[coord[0]][coord[1]]) {
-          self.cells[coord[0]][coord[1]] = {
+    self.loadPreset();
+    self.render();
+  }
+
+  loadPreset() {
+    var self = this;
+    var preset = localStorage.preset ? JSON.parse(localStorage.preset) : self.options.preset
+
+    if (preset) {
+      preset.forEach(function(cell) {
+        if (Array.isArray(cell) && self.cells[cell[0]] && self.cells[cell[0]][cell[1]]) {
+          self.cells[cell[0]][cell[1]] = {
             life: 1,
-            r: self.options.rgb.r,
-            g: self.options.rgb.g,
-            b: self.options.rgb.b,
-          };
+            r: 255,
+            g: 255,
+            b: 255
+          }
+        } else if(cell.x && cell.y && self.cells[cell.x] && self.cells[cell.x][cell.y]) {
+          self.cells[cell.x][cell.y] = {
+            life: cell.life || 1,
+            r: cell.r === undefined ? 255 : cell.r,
+            g: cell.g === undefined ? 255 : cell.g,
+            b: cell.b === undefined ? 255 : cell.b
+          }
         }
       });
     }
-
-    self.render();
   }
 
   save() {
     var self = this;
+    var snapshot = [];
 
-    localStorage.cells = JSON.stringify(self.cells)
+    self.cells.forEach(function(row, x) {
+      row.forEach(function(cell, y) {
+        if (cell.life) {
+          cell.x = x;
+          cell.y = y;
+          snapshot.push(cell);
+        };
+      });
+    });
+
+    localStorage.preset = JSON.stringify(snapshot);
   }
 
   defaults() {
     var self = this;
 
-    localStorage.removeItem('cells');
+    localStorage.removeItem('preset');
     self.init();
   }
 
@@ -74,33 +98,42 @@ class GoL {
     self.cells.forEach(function(row, x) {
       newCells[x] = [];
       row.forEach(function(cell, y) {
-        var alive = {life: 0};
-        var count = countNeighbours(x, y);
+        var neighbours = getNeighbours(x, y);
+        var newCell = {life: 0};
 
         if (cell.life) {
-          alive.life = count === 2 || count === 3 ? cell.life + 1 : 0;
-        } else {
-          alive.life = count === 3 ? 1 : 0;
+          if (neighbours.length === 2 || neighbours.length === 3) {
+            newCell.life = (cell.life + 1);
+            newCell.r = cell.r;
+            newCell.g = cell.g;
+            newCell.b = cell.b;
+          }
+        } else if(neighbours.length === 3) {
+          newCell.life = 1;
+          newCell.r = neighbours[0].r;
+          newCell.g = neighbours[1].g;
+          newCell.b = neighbours[2].b;
         }
 
-        newCells[x][y] = alive;
+        newCells[x][y] = newCell;
+
       });
     });
 
     self.cells = newCells;
     self.render();
 
-    function countNeighbours(x, y) {
-      var count = 0;
-      if (isFilled(x-1, y  )) count++; // Left
-      if (isFilled(x-1, y-1)) count++;
-      if (isFilled(x,   y-1)) count++; // Above
-      if (isFilled(x+1, y-1)) count++;
-      if (isFilled(x+1, y  )) count++; // Right
-      if (isFilled(x+1, y+1)) count++;
-      if (isFilled(x,   y+1)) count++; // Below
-      if (isFilled(x-1, y+1)) count++;
-      return count;
+    function getNeighbours(x, y) {
+      var neighbours = [];
+      if (isFilled(x-1, y  )) neighbours.push(self.cells[x-1][y]); // Left
+      if (isFilled(x-1, y-1)) neighbours.push(self.cells[x-1][y-1]);
+      if (isFilled(x,   y-1)) neighbours.push(self.cells[x][y-1]); // Above
+      if (isFilled(x+1, y-1)) neighbours.push(self.cells[x+1][y-1]);
+      if (isFilled(x+1, y  )) neighbours.push(self.cells[x+1][y]); // Right
+      if (isFilled(x+1, y+1)) neighbours.push(self.cells[x+1][y+1]);
+      if (isFilled(x,   y+1)) neighbours.push(self.cells[x][y+1]); // Below
+      if (isFilled(x-1, y+1)) neighbours.push(self.cells[x-1][y+1]);
+      return neighbours;
     }
     function isFilled(x, y) {
       return self.cells[x] && self.cells[x][y] && self.cells[x][y].life;
@@ -120,7 +153,9 @@ class GoL {
           self.context.fillStyle = self.getColor(cell);
           self.context.fill();
         }
-        else self.context.stroke();
+        else {
+          self.context.stroke();
+        }
       });
     });
   }
@@ -140,9 +175,9 @@ class GoL {
       } else if (self.cells[x][y].life === 0){
         self.cells[x][y] = {
           life: 1,
-          r: self.options.rgb.r,
-          g: self.options.rgb.g,
-          b: self.options.rgb.b,
+          r: self.options.brush.r,
+          g: self.options.brush.g,
+          b: self.options.brush.b,
         };
         self.context.fillStyle = self.getColor(self.cells[x][y]);
         self.context.beginPath();
@@ -185,11 +220,11 @@ class GoL {
     if (self.options.opacity && self.options.inheritColors) {
       return 'rgba(' + cell.r + ',' + cell.g + ',' + cell.b + ',' + (cell.life * 0.1) + ')';
     } else if (self.options.opacity) {
-      return 'rgba(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ',' + (cell.life * 0.1) + ')';
+      return 'rgba(' + self.options.brush.r + ',' + self.options.brush.g + ',' + self.options.brush.b + ',' + (cell.life * 0.1) + ')';
     } else if (self.options.inheritColors) {
       return 'rgb(' + cell.r + ',' + cell.g + ',' + cell.b + ')';
     } else {
-      return 'rgb(' + self.options.rgb.r + ',' + self.options.rgb.g + ',' + self.options.rgb.b + ')';
+      return 'rgb(' + self.options.brush.r + ',' + self.options.brush.g + ',' + self.options.brush.b + ')';
     }
   }
 }
