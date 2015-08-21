@@ -162,7 +162,7 @@ body.dark {
 
 .footer {
   align-self: center;
-  margin: 10px 0 0;
+  margin: 10px 0 0 !important;
 }
 
 .footer a{
