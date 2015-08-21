@@ -141,6 +141,19 @@ $('#interactive').on('click', function() {
   $('#canvas').classList.toggle('pointer');
 });
 
+$('#boardColor').on('click', function() {
+  if (this.value === 'Light Mode') {
+    this.value = 'Dark Mode';
+    $('body').classList.remove('dark');
+    gol.options.boardColor = 'Light Mode';
+  } else {
+    this.value = 'Light Mode';
+    $('body').classList.add('dark');
+    gol.options.boardColor = 'Dark Mode';
+  }
+  gol.render();
+});
+
 if (gol.options.interactive) {
   $('#interactive').classList.toggle('active');
   $('#canvas').classList.toggle('pointer');
