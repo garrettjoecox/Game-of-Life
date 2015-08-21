@@ -5,8 +5,8 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
-  <body class="dark">
-    <div class="config">
+  <body>
+    <div id="configMenu">
       <div class="main title">Game of Life</div>
       <div class="flexColumn">
         <div class="title">Playback</div>
@@ -17,65 +17,65 @@
       </div>
       <div class="flexColumn">
         <div class="title">Tick Length</div>
-        <input id="speed" type="range" min="1" max="1000">
+        <input id="speedSlider" type="range" min="1" max="1000">
       </div>
       <div class="flexColumn">
         <div class="title">Width</div>
         <div class="flexRow">
-          <input id="minusWidth" class="btn blendRight" type="button" value="-">
-          <input id="width" class="input" type="text">
-          <input id="addWidth" class="btn blendLeft" type="button" value="+">
+          <input id="widthMinusButton" class="btn blendRight" type="button" value="-">
+          <input id="widthInput" class="input" type="text">
+          <input id="widthAddButton" class="btn blendLeft" type="button" value="+">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title">Height</div>
         <div class="flexRow">
-          <input id="minusHeight" class="btn blendRight" type="button" value="-">
-          <input id="height" class="input" type="text">
-          <input id="addHeight" class="btn blendLeft" type="button" value="+">
+          <input id="heightMinusButton" class="btn blendRight" type="button" value="-">
+          <input id="heightInput" class="input" type="text">
+          <input id="heightAddButton" class="btn blendLeft" type="button" value="+">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title">Cell Size</div>
         <div class="flexRow">
-          <input id="minusCellSize" class="btn blendRight" type="button" value="-">
-          <input id="cellSize" class="input" type="text">
-          <input id="addCellSize" class="btn blendLeft" type="button" value="+">
+          <input id="cellSizeMinusButton" class="btn blendRight" type="button" value="-">
+          <input id="cellSizeInput" class="input" type="text">
+          <input id="cellSizeAddButton" class="btn blendLeft" type="button" value="+">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title" id="colorTitle">Cell Color</div>
         <div class="flexRow">
-          <input id="cellColor" class="input round" type="text">
+          <input id="brushColorInput" class="input round" type="text">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title">Board Color</div>
         <div class="flexRow">
-          <input id="boardColor" class="btn round" type="button" value="Light Mode">
+          <input id="boardColorButton" class="btn round" type="button" value="Light Mode">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title">Toggles</div>
         <div class="flexRow">
-          <input id="opacity" class="btn blendRight" type="button" value="Opacity">
-          <input id="colors" class="btn" type="button" value="Colors">
-          <input id="interactive" class="btn blendLeft" type="button" value="Mouse">
+          <input id="opacityButton" class="btn blendRight" type="button" value="Opacity">
+          <input id="colorsButton" class="btn" type="button" value="Colors">
+          <input id="mouseButton" class="btn blendLeft" type="button" value="Mouse">
         </div>
       </div>
       <div class="flexColumn">
         <div class="title">Preset</div>
         <div class="flexRow">
-          <input id="save" class="btn blendRight" type="button" value="Save">
-          <input id="defaults" class="btn blendLeft" type="button" value="Default">
+          <input id="saveButton" class="btn blendRight" type="button" value="Save">
+          <input id="defaultButton" class="btn blendLeft" type="button" value="Default">
         </div>
       </div>
       <div class="footer">
         <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">What is this?</a>
       </div>
     </div>
-    <div class="configButtonContainer">
-      <a class="configButton fa fa-cog fa-2x"></a>
+    <div id="configButton">
+      <a class="fa fa-cog fa-2x"></a>
     </div>
     <!-- <a href="https://github.com/garrettjoecox/Game-of-Life" id="forkme">Fork me on GitHub</a> -->
     <canvas id="canvas"></canvas>
