@@ -112,6 +112,7 @@ $('#addCellSize').on('click', function() {
 
 $('#cellColor').on('change', function() {
   gol.options.brush = hexToRgb(this.value);
+  gol.render();
 }).value = gol.options.cellColor;
 
 $('#opacity').on('click', function() {
@@ -126,6 +127,7 @@ if (gol.options.opacity) {
 
 $('#colors').on('click', function() {
   gol.options.inheritColors = !gol.options.inheritColors;
+  gol.render();
   this.classList.toggle('active');
 });
 
