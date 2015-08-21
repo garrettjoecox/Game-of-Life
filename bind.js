@@ -127,12 +127,14 @@ if (gol.options.opacity) {
 
 $('#colors').on('click', function() {
   gol.options.inheritColors = !gol.options.inheritColors;
+  $('#colorTitle').innerText = $('#colorTitle').innerText === 'Brush Color' ? 'Cell Color' : 'Brush Color';
   gol.render();
   this.classList.toggle('active');
 });
 
 if (gol.options.inheritColors) {
   $('#colors').classList.toggle('active');
+  $('#colorTitle').innerText = 'Brush Color';
 }
 
 $('#interactive').on('click', function() {
