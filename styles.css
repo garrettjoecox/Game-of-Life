@@ -11,6 +11,13 @@ body {
   overflow: hidden;
 }
 
+body * {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 body.dark {
   background-color: #222;
 }
@@ -50,7 +57,8 @@ body.dark {
 
 .configButtonContainer {
   align-items: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: gray;
+  opacity: 0.5;
   cursor: pointer;
   display: -webkit-box;
   display: -moz-box;
@@ -72,8 +80,6 @@ body.dark {
 
 .configButtonContainer.open {
   left: 190px;
-
-  transition: all 250ms ease;
 }
 
 .configButtonContainer:hover, .configButtonContainer.open {
@@ -81,6 +87,7 @@ body.dark {
   border-right: 1px solid #BBB;
   border-bottom: 1px solid #BBB;
   background-color: white;
+  opacity: 1;
 
   transition: all 250ms ease;
 }
@@ -155,6 +162,37 @@ body.dark {
   align-self: center;
   font-size: 1.4em;
 }
+
+.footer {
+  align-self: center;
+  margin: 10px 0 0;
+}
+
+.footer a{
+  font-size: 0.9em;
+  color: cornflowerblue;
+  text-decoration: none;
+}
+
+/*#forkme {
+  opacity: 0.5;
+  color: cornflowerblue;
+  text-decoration: none;
+  position: absolute;
+  transform: rotate(45deg);
+  background: white;
+  border: 1px solid #BBB;
+  z-index: 101;
+  top: 4em;
+  right: -6em;
+  padding: 10px 100px;
+  transition: opacity 250ms ease;
+}
+
+#forkme:hover {
+  opacity: 1;
+  transition: opacity 250ms ease;
+}*/
 
 input {
   font-weight: 100;
