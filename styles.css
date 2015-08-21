@@ -4,11 +4,8 @@ html, body {
   margin: 0;
   min-height: 100vh;
   min-width: 100vw;
-  padding: 0;
-}
-
-body {
   overflow: hidden;
+  padding: 0;
 }
 
 body * {
@@ -22,9 +19,11 @@ body.dark {
   background-color: #222;
 }
 
-.config {
+#configMenu {
   background-color: white;
-  padding: 20px;
+  border-radius: 0 0 10px 0;
+  border-bottom: 1px solid #BBB;
+  border-right: 1px solid #BBB;
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -33,9 +32,7 @@ body.dark {
   -webkit-flex-flow: row nowrap;
   flex-flow: column;
   min-width: 150px;
-  border-radius: 0 0 10px 0;
-  border-right: 1px solid #BBB;
-  border-bottom: 1px solid #BBB;
+  padding: 20px;
 
   left: -191px;
   position: absolute;
@@ -45,20 +42,20 @@ body.dark {
   transition: all 250ms ease;
 }
 
-.config > * {
+#configMenu > * {
   margin: 5px 0;
 }
 
-.config.open {
+#configMenu.open {
   left: 0;
 
   transition: all 250ms ease;
 }
 
-.configButtonContainer {
+#configButton {
   align-items: center;
+  border-radius: 0 0 10px 0;
   color: gray;
-  opacity: 0.5;
   cursor: pointer;
   display: -webkit-box;
   display: -moz-box;
@@ -67,51 +64,51 @@ body.dark {
   display: flex;
   min-width: 45px;
   min-height: 45px;
+  opacity: 0.5;
   text-align: center;
-  border-radius: 0 0 10px 0;
 
-  position: absolute;
   left: 0;
+  position: absolute;
   top: 0;
   z-index: 100;
 
   transition: all 250ms ease;
 }
 
-.configButtonContainer.open {
+#configButton.open {
   left: 190px;
 }
 
-.configButtonContainer:hover, .configButtonContainer.open {
-  color: #333;
+#configButton:hover, #configButton.open {
+  background-color: white;
   border-right: 1px solid #BBB;
   border-bottom: 1px solid #BBB;
-  background-color: white;
+  color: #333;
   opacity: 1;
 
   transition: all 250ms ease;
 }
 
-.configButtonContainer .configButton {
+#configButton a {
   flex: 1;
 
   transition: transform 250ms ease;
 }
 
-.configButtonContainer:hover .configButton, .configButtonContainer.open .configButton {
+#configButton:hover a, #configButton.open a {
   transform: rotate(25deg);
 
   transition: transform 250ms ease;
 }
 
 #canvas {
-  z-index: 99;
-  position: absolute;
   left: 0;
+  position: absolute;
   top: 0;
+  z-index: 99;
 }
 
-.pointer {
+#canvas.pointer {
   cursor: pointer;
 }
 
@@ -174,7 +171,7 @@ body.dark {
   text-decoration: none;
 }
 
-/*#forkme {
+#forkme {
   opacity: 0.5;
   color: cornflowerblue;
   text-decoration: none;
@@ -192,7 +189,7 @@ body.dark {
 #forkme:hover {
   opacity: 1;
   transition: opacity 250ms ease;
-}*/
+}
 
 input {
   font-weight: 100;
