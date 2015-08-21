@@ -112,6 +112,7 @@ $('#addCellSize').on('click', function() {
 
 $('#cellColor').on('change', function() {
   gol.options.brush = hexToRgb(this.value);
+  gol.render();
 }).value = gol.options.cellColor;
 
 $('#opacity').on('click', function() {
@@ -126,6 +127,7 @@ if (gol.options.opacity) {
 
 $('#colors').on('click', function() {
   gol.options.inheritColors = !gol.options.inheritColors;
+  gol.render();
   this.classList.toggle('active');
 });
 
@@ -137,6 +139,19 @@ $('#interactive').on('click', function() {
   gol.options.interactive = !gol.options.interactive;
   this.classList.toggle('active');
   $('#canvas').classList.toggle('pointer');
+});
+
+$('#boardColor').on('click', function() {
+  if (this.value === 'Light Mode') {
+    this.value = 'Dark Mode';
+    $('body').classList.remove('dark');
+    gol.options.boardColor = 'Light Mode';
+  } else {
+    this.value = 'Light Mode';
+    $('body').classList.add('dark');
+    gol.options.boardColor = 'Dark Mode';
+  }
+  gol.render();
 });
 
 if (gol.options.interactive) {

@@ -144,6 +144,7 @@ class GoL {
     var self = this;
 
     self.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    self.context.strokeStyle = self.options.boardColor === 'Dark Mode' ? '#272727' : '#EEE';
 
     self.cells.forEach(function(row, x) {
       row.forEach(function(cell, y) {
