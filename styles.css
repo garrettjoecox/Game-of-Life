@@ -181,7 +181,7 @@ input[type="range"]{
   margin-top: 5px;
   margin-bottom: 5px;
   -webkit-appearance: none;
-  height: 1px;
+  max-height: 1px;
   background: #BBB;
 }
 

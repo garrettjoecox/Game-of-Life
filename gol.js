@@ -194,18 +194,10 @@ class GoL {
     self.canvasElement.addEventListener('mousedown', function() {
       if (!self.options.interactive) return;
       self.mouseMoved = false;
-      self.canvasElement.onmousemove = function(e) {
-        if (!e.buttons) {
-          self.canvasElement.onmousemove = null;
-          return;
-        }
-        self.mouseMoved = true;
-        self.toggleCell(e.x, e.y);
-      };
+      self.canvasElement.addEventListener('mousemove', mouseMove, true);
     })
     self.canvasElement.addEventListener('mouseup', function() {
-      if (!self.options.interactive) return;
-      self.canvasElement.onmousemove = null;
+      self.canvasElement.removeEventListener('mousemove', mouseMove, true);
     });
     self.canvasElement.addEventListener('click', function(e) {
       if (!self.options.interactive) return;
@@ -213,6 +205,15 @@ class GoL {
         self.toggleCell(e.x, e.y, true)
       }
     });
+    
+    function mouseMove(e) {
+      if (!e.buttons && !e.which) {
+        self.canvasElement.removeEventListener('mousemove', mouseMove, true);
+        return;
+      }
+      self.mouseMoved = true;
+      self.toggleCell(e.x, e.y);
+    };
   }
 
   getColor(cell) {
