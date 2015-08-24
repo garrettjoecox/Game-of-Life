@@ -209,7 +209,7 @@ GoL.prototype.bindMouseEvents = function() {
       return;
     }
     self.mouseMoved = true;
-    self.toggleCell(e.x, e.y);
+    self.toggleCell(e.x || e.clientX, e.y || e.clientY);
   };
 }
 
