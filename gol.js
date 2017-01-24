@@ -1,229 +1,264 @@
-function GoL(options, id){
 
-  var self = this;
+/**
+ class GoL
+ @method init()
+   Resets entire game
+ @method step()
+   Advance a step in the game
+ @method redraw()
+   Redraws board with current game and settings
+ */
+class GoL {
 
-  // Hacky, fix this.
-  self.options = JSON.parse(JSON.stringify(options));
+  constructor(options) {
 
-  self.canvasElement = document.querySelector(id);
-  self.canvasElement.setAttribute('width', self.options.width);
-  self.canvasElement.setAttribute('height', self.options.height);
-  self.context = self.canvasElement.getContext('2d');
-  self.options.widthCells = Math.floor(options.width / options.cellSize);
-  self.options.heightCells = Math.floor(options.height / options.cellSize);
-  self.options.brush = hexToRgb(self.options.cellColor);
-  self.context.strokeStyle = self.options.gridColor;
+    this.options = options;
+    this.options.brush = hexToRgb(this.options.cellColor);
+    this.board = new Board(this.options);
 
-  self.bindMouseEvents();
-  self.init();
+    this.init();
 
-  (function c() {
-    if (self.options.state === 'Play') self.step();
-    setTimeout(c, self.options.speed);
-  })();
+    const self = this;
+    (function clock() {
+      if (self.options.running) self.step();
+
+      setTimeout(clock, self.options.speed);
+    })();
+  }
+
+  init() {
+
+    this.matrix = new Matrix(this.options.width, this.options.height, this.options.preset);
+    this.board.onCellClick(cell => {
+      if (this.options.interactive) {
+        this.matrix.toggle({
+          age: 1,
+          x: cell.x,
+          y: cell.y,
+          r: this.options.brush.r,
+          g: this.options.brush.g,
+          b: this.options.brush.b,
+          canRemove: cell.canRemove
+        });
+
+        this.redraw();
+      }
+    });
+    this.redraw();
+  }
+
+  redraw() {
+
+    this.board.render(this.matrix);
+  }
+
+  step() {
+
+    this.matrix.step();
+    this.redraw();
+  }
 }
 
-GoL.prototype.init = function() {
 
-  var self = this;
-  self.cells = [];
+/**
+ class Board
+ @constructor(options)
+ @method render(matrix)
+   Draw the provided matrix onto the canvas
+ @method onCellClick(callback)
+   Attach listener for toggle cell events
+ */
+class Board {
 
-  for (var i = 0; i < self.options.widthCells; i++) {
-    self.cells[i] = [];
-    for (var j = 0; j < self.options.heightCells; j++) {
-      self.cells[i][j] = { life: 0 };
+  constructor(options) {
+
+    this.options = options;
+
+    if (typeof this.options.canvas === 'string') this.canvas = document.querySelector(this.options.canvas);
+    else if (this.options.canvas instanceof HTMLElement) this.canvas = this.options.canvas;
+    else {
+      this.canvas = document.createElement('canvas');
+      document.body.appendChild(this.canvas);
+    }
+
+    this.canvas.setAttribute('width', this.options.width * this.options.cellSize);
+    this.canvas.setAttribute('height', this.options.height * this.options.cellSize);
+    this.context = this.canvas.getContext('2d');
+
+    this.bindMouseEvents();
+  }
+
+  render(matrix) {
+
+    this.canvas.setAttribute('width', this.options.width * this.options.cellSize);
+    this.canvas.setAttribute('height', this.options.height * this.options.cellSize);
+    this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    this.context.strokeStyle = this.options.borderColor;
+
+    matrix.cells.forEach(row => {
+
+      row.forEach(cell => {
+
+        this.context.beginPath();
+        this.context.rect(cell.x * this.options.cellSize, cell.y * this.options.cellSize, this.options.cellSize, this.options.cellSize);
+
+        if (cell.age) {
+          this.context.fillStyle = this.getColor(cell);
+          this.context.fill();
+        }
+
+        this.context.stroke();
+      });
+    });
+  }
+
+  getColor(cell) {
+
+    if (this.options.opacity && this.options.inheritColors) {
+      return `rgba(${cell.r}, ${cell.g}, ${cell.b}, ${cell.age * 0.1})`;
+    } else if (this.options.opacity) {
+      return `rgba(${this.options.brush.r}, ${this.options.brush.g}, ${this.options.brush.b}, ${cell.age * 0.1})`;
+    } else if (this.options.inheritColors) {
+      return `rgb(${cell.r}, ${cell.g}, ${cell.b})`;
+    } else {
+      return `rgb(${this.options.brush.r}, ${this.options.brush.g}, ${this.options.brush.b})`;
     }
   }
 
-  self.loadPreset();
-  self.render();
-}
+  onCellClick(callback) {
 
-GoL.prototype.loadPreset = function() {
-  var self = this;
-  var preset = localStorage.preset ? JSON.parse(localStorage.preset) : self.options.preset
+    this.onCellClickCallback = callback;
+  }
 
-  if (preset) {
-    preset.forEach(function(cell) {
-      if (Array.isArray(cell) && self.cells[cell[0]] && self.cells[cell[0]][cell[1]]) {
-        self.cells[cell[0]][cell[1]] = {
-          life: 1,
-          r: 255,
-          g: 255,
-          b: 255
-        }
-      } else if(cell.x && cell.y && self.cells[cell.x] && self.cells[cell.x][cell.y]) {
-        self.cells[cell.x][cell.y] = {
-          life: cell.life || 1,
-          r: cell.r === undefined ? 255 : cell.r,
-          g: cell.g === undefined ? 255 : cell.g,
-          b: cell.b === undefined ? 255 : cell.b
-        }
-      }
+  bindMouseEvents() {
+    let mouseMoved = false;
+
+    this.canvas.addEventListener('mousedown', () => {
+      mouseMoved = false;
+      this.canvas.addEventListener('mousemove', mouseMove, true);
     });
+
+    this.canvas.addEventListener('mouseup', () => {
+      this.canvas.removeEventListener('mousemove', mouseMove, true);
+    });
+
+    this.canvas.addEventListener('click', e => {
+      if (!mouseMoved) toggle(e.offsetX, e.offsetY, true);
+    });
+
+    const self = this;
+    function mouseMove(e) {
+      if (!e.buttons && !e.which) {
+        self.canvas.removeEventListener('mousemove', mouseMove, true);
+        return;
+      }
+
+      mouseMoved = true;
+      toggle(e.offsetX , e.offsetY);
+    }
+    function toggle(x, y, canRemove) {
+      self.onCellClickCallback({
+        x: Math.floor(x / self.options.cellSize),
+        y: Math.floor(y / self.options.cellSize),
+        canRemove: canRemove
+      });
+    }
   }
 }
 
-GoL.prototype.save = function() {
-  var self = this;
-  var snapshot = [];
 
-  self.cells.forEach(function(row, x) {
-    row.forEach(function(cell, y) {
-      if (cell.life) {
-        cell.x = x;
-        cell.y = y;
-        snapshot.push(cell);
-      };
-    });
-  });
+/**
+ class Matrix
+ @constructor(width, height, preset)
+ @method step()
+   Advance all cells a single step
+ */
+class Matrix {
 
-  localStorage.preset = JSON.stringify(snapshot);
-}
+  constructor(width, height, preset) {
+    this.cells = [];
 
-GoL.prototype.defaults = function() {
-  var self = this;
-
-  localStorage.removeItem('preset');
-  self.init();
-}
-
-GoL.prototype.step = function() {
-  var self = this;
-  var newCells = [];
-
-  self.cells.forEach(function(row, x) {
-    newCells[x] = [];
-    row.forEach(function(cell, y) {
-      var neighbours = getNeighbours(x, y);
-      var newCell = {life: 0};
-
-      if (cell.life) {
-        if (neighbours.length === 2 || neighbours.length === 3) {
-          newCell.life = (cell.life + 1);
-          newCell.r = cell.r;
-          newCell.g = cell.g;
-          newCell.b = cell.b;
-        }
-      } else if(neighbours.length === 3) {
-        newCell.life = 1;
-        newCell.r = neighbours[0].r;
-        newCell.g = neighbours[1].g;
-        newCell.b = neighbours[2].b;
+    for (let w = 0; w < width; w++) {
+      this.cells[w] = [];
+      for (let h = 0; h < height; h++) {
+        this.cells[w][h] = new Cell({ x: w, y: h });
       }
+    }
 
-      newCells[x][y] = newCell;
+    if (preset) {
+      preset.forEach(cell => {
+        if (this.cells[cell.x] && this.cells[cell.x][cell.y]) this.cells[cell.x][cell.y] = new Cell(cell);
+      });
+    }
 
+  }
+
+  step() {
+    let cells = [];
+
+    this.cells.forEach((row, w) => {
+      cells[w] = [];
+
+      row.forEach((oldCell, h) => {
+        let cell = cells[w][h] = new Cell(oldCell);
+        let neighbours = this.getNeighbours(cell);
+
+        // If alive
+        if (cell.age > 0) {
+          // if too many or too little neighbours
+          if (neighbours.length > 3 || neighbours.length < 2) cell.age = 0;
+          else cell.age++;
+
+        // If dead and 3 neighbours
+        } else if (neighbours.length === 3) {
+          cell.age++;
+          cell.r = neighbours[0].r;
+          cell.g = neighbours[1].g;
+          cell.b = neighbours[2].b;
+        }
+      });
     });
-  });
 
-  self.cells = newCells;
-  self.render();
+    this.cells = cells;
+  }
 
-  function getNeighbours(x, y) {
-    var neighbours = [];
-    if (isFilled(x-1, y  )) neighbours.push(self.cells[x-1][y]); // Left
-    if (isFilled(x-1, y-1)) neighbours.push(self.cells[x-1][y-1]);
-    if (isFilled(x,   y-1)) neighbours.push(self.cells[x][y-1]); // Above
-    if (isFilled(x+1, y-1)) neighbours.push(self.cells[x+1][y-1]);
-    if (isFilled(x+1, y  )) neighbours.push(self.cells[x+1][y]); // Right
-    if (isFilled(x+1, y+1)) neighbours.push(self.cells[x+1][y+1]);
-    if (isFilled(x,   y+1)) neighbours.push(self.cells[x][y+1]); // Below
-    if (isFilled(x-1, y+1)) neighbours.push(self.cells[x-1][y+1]);
+  getNeighbours(cell) {
+    let self = this;
+    let neighbours = [];
+    pushIfAlive(cell.x-1, cell.y  );
+    pushIfAlive(cell.x-1, cell.y-1);
+    pushIfAlive(cell.x  , cell.y-1);
+    pushIfAlive(cell.x+1, cell.y-1);
+    pushIfAlive(cell.x+1, cell.y  );
+    pushIfAlive(cell.x+1, cell.y+1);
+    pushIfAlive(cell.x  , cell.y+1);
+    pushIfAlive(cell.x-1, cell.y+1);
     return neighbours;
+
+    function pushIfAlive(x, y) {
+      if (self.cells[x] && self.cells[x][y] && self.cells[x][y].age > 0) neighbours.push(self.cells[x][y]);
+    }
   }
-  function isFilled(x, y) {
-    return self.cells[x] && self.cells[x][y] && self.cells[x][y].life;
-  }
-}
 
-GoL.prototype.render = function() {
-  var self = this;
-
-  self.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  self.context.strokeStyle = self.options.boardColor === 'Dark Mode' ? '#272727' : '#EEE';
-
-  self.cells.forEach(function(row, x) {
-    row.forEach(function(cell, y) {
-      self.context.beginPath();
-      self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-      if (cell.life) {
-        self.context.fillStyle = self.getColor(cell);
-        self.context.fill();
-      }
+  toggle(cell) {
+    if (this.cells[cell.x] && this.cells[cell.x][cell.y]) {
+      if (this.cells[cell.x][cell.y].age > 0 && cell.canRemove) this.cells[cell.x][cell.y].age = 0;
       else {
-        self.context.stroke();
+        this.cells[cell.x][cell.y] = new Cell(cell);
       }
-    });
-  });
-}
-
-GoL.prototype.toggleCell = function(x, y, canRemove) {
-  var self = this;
-
-  x = Math.floor(x/self.options.cellSize);
-  y = Math.floor(y/self.options.cellSize);
-  if (self.cells[x] && self.cells[x][y] !== undefined) {
-    if (self.cells[x][y].life > 0 && canRemove) {
-      self.cells[x][y] = { life: 0 };
-      self.context.clearRect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-      self.context.beginPath();
-      self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-      self.context.stroke();
-    } else if (self.cells[x][y].life === 0){
-      self.cells[x][y] = {
-        life: 1,
-        r: self.options.brush.r,
-        g: self.options.brush.g,
-        b: self.options.brush.b,
-      };
-      self.context.fillStyle = self.getColor(self.cells[x][y]);
-      self.context.beginPath();
-      self.context.rect(x * self.options.cellSize, y * self.options.cellSize, self.options.cellSize, self.options.cellSize);
-      self.context.fill();
     }
   }
 }
 
-GoL.prototype.bindMouseEvents = function() {
-  var self = this;
 
-  self.canvasElement.addEventListener('mousedown', function() {
-    if (!self.options.interactive) return;
-    self.mouseMoved = false;
-    self.canvasElement.addEventListener('mousemove', mouseMove, true);
-  })
-  self.canvasElement.addEventListener('mouseup', function() {
-    self.canvasElement.removeEventListener('mousemove', mouseMove, true);
-  });
-  self.canvasElement.addEventListener('click', function(e) {
-    if (!self.options.interactive) return;
-    if (!self.mouseMoved) {
-      self.toggleCell(e.x, e.y, true)
-    }
-  });
-
-  function mouseMove(e) {
-    if (!e.buttons && !e.which) {
-      self.canvasElement.removeEventListener('mousemove', mouseMove, true);
-      return;
-    }
-    self.mouseMoved = true;
-    self.toggleCell(e.x || e.clientX, e.y || e.clientY);
-  };
-}
-
-GoL.prototype.getColor = function(cell) {
-  var self = this;
-
-  if (self.options.opacity && self.options.inheritColors) {
-    return 'rgba(' + cell.r + ',' + cell.g + ',' + cell.b + ',' + (cell.life * 0.1) + ')';
-  } else if (self.options.opacity) {
-    return 'rgba(' + self.options.brush.r + ',' + self.options.brush.g + ',' + self.options.brush.b + ',' + (cell.life * 0.1) + ')';
-  } else if (self.options.inheritColors) {
-    return 'rgb(' + cell.r + ',' + cell.g + ',' + cell.b + ')';
-  } else {
-    return 'rgb(' + self.options.brush.r + ',' + self.options.brush.g + ',' + self.options.brush.b + ')';
+class Cell {
+  constructor({ age = 0, r = 255, g = 255, b = 255, x = 0, y = 0 }) {
+    this.age = age;
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.x = x;
+    this.y = y;
   }
 }
 

@@ -5,100 +5,104 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
-  <body>
-    <div id="configMenu">
-      <div class="main title">Game of Life</div>
-      <div class="flexColumn">
-        <div class="title">Playback</div>
-        <div class="flexRow">
-          <input id="stateButton" class="btn blendRight" type="button" value="Pause">
-          <input id="resetButton" class="btn blendLeft" type="button" value="Reset">
+  <body class="col dark">
+    <div class="configContainer row">
+      <div class="config col">
+        <span class="main title">Game of Life</span>
+        <div class="col">
+          <span class="title">Playback</span>
+          <div class="row">
+            <input id="runningButton" type="button" class="f1 button blendRight" value="Pause">
+            <input id="stepButton" type="button" class="f1 button blendRight blendLeft" value="Step">
+            <input id="resetButton" type="button" class="f1 button blendLeft" value="Reset">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Tick Length</div>
-        <input id="speedSlider" type="range" min="1" max="1000">
-      </div>
-      <div class="flexColumn">
-        <div class="title">Width</div>
-        <div class="flexRow">
-          <input id="widthMinusButton" class="btn blendRight" type="button" value="-">
-          <input id="widthInput" class="input" type="text">
-          <input id="widthAddButton" class="btn blendLeft" type="button" value="+">
+        <div class="col">
+          <span class="title">Tick Length</span>
+          <div class="row">
+            <input id="speedSlider" type="range" min="1" max="500" class="f1 range">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Height</div>
-        <div class="flexRow">
-          <input id="heightMinusButton" class="btn blendRight" type="button" value="-">
-          <input id="heightInput" class="input" type="text">
-          <input id="heightAddButton" class="btn blendLeft" type="button" value="+">
+        <div class="col">
+          <span class="title">Width</span>
+          <div class="row">
+            <input id="widthSButton" type="button" class="button blendRight" value="-">
+            <input id="widthInput" type="text" class="f1 input blendRight blendLeft">
+            <input id="widthAButton" type="button" class="button blendLeft" value="+">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Cell Size</div>
-        <div class="flexRow">
-          <input id="cellSizeMinusButton" class="btn blendRight" type="button" value="-">
-          <input id="cellSizeInput" class="input" type="text">
-          <input id="cellSizeAddButton" class="btn blendLeft" type="button" value="+">
+        <div class="col">
+          <span class="title">Height</span>
+          <div class="row">
+            <input id="heightSButton" type="button" class="button blendRight" value="-">
+            <input id="heightInput" type="text" class="f1 input blendRight blendLeft">
+            <input id="heightAButton" type="button" class="button blendLeft" value="+">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title" id="colorTitle">Cell Color</div>
-        <div class="flexRow">
-          <input id="brushColorInput" class="input round" type="text">
+        <div class="col">
+          <span class="title">Cell Size</span>
+          <div class="row">
+            <input id="cellSizeSButton" type="button" class="button blendRight" value="-">
+            <input id="cellSizeInput" type="text" class="f1 input blendRight blendLeft">
+            <input id="cellSizeAButton" type="button" class="button blendLeft" value="+">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Board Color</div>
-        <div class="flexRow">
-          <input id="boardColorButton" class="btn round" type="button" value="Light Mode">
+        <div class="col">
+          <span class="title" id="cellColorTitle">Brush Color</span>
+          <div class="row">
+            <input id="cellColorInput" type="color" class="f1 input">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Toggles</div>
-        <div class="flexRow">
-          <input id="opacityButton" class="btn blendRight" type="button" value="Opacity">
-          <input id="colorsButton" class="btn" type="button" value="Colors">
-          <input id="mouseButton" class="btn blendLeft" type="button" value="Mouse">
+        <div class="col">
+          <span class="title">Board Theme</span>
+          <div class="row">
+            <input id="lightThemeButton" type="button" class="f1 button blendRight" value="Light">
+            <input id="darkThemeButton" type="button" class="f1 button blendLeft active" value="Dark">
+          </div>
         </div>
-      </div>
-      <div class="flexColumn">
-        <div class="title">Preset</div>
-        <div class="flexRow">
-          <input id="saveButton" class="btn blendRight" type="button" value="Save">
-          <input id="defaultButton" class="btn blendLeft" type="button" value="Default">
+        <div class="col">
+          <span class="title">Toggles</span>
+          <div class="row">
+            <input id="opacityButton" type="button" class="f1 button blendRight" value="Opacity">
+            <input id="colorsButton" type="button" class="f1 button blendRight blendLeft" value="Colors">
+            <input id="mouseButton" type="button" class="f1 button blendLeft" value="Mouse">
+          </div>
         </div>
+<!--         <div class="col">
+          <span class="title">Preset</span>
+          <div class="row">
+            <input id="saveButton" type="button" class="f1 button blendRight" value="Save">
+            <input id="defaultButton" type="button" class="f1 button blendLeft" value="Default">
+          </div>
+        </div> -->
+        <a class="wiki" href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">What is this?</a>
       </div>
-      <div class="footer">
-        <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">What is this?</a>
+      <div class="cogContainer">
+        <button tabindex="1" class="cog fa fa-cog fa-2x"></button>
       </div>
     </div>
-    <div id="configButton">
-      <a class="fa fa-cog fa-2x"></a>
-    </div>
-    <a href="https://github.com/garrettjoecox/Game-of-Life" id="forkme">Fork me on GitHub</a>
     <canvas id="canvas"></canvas>
     <script src="gol.js"></script>
     <script>
+      var preset =  [{"age":1,"r":255,"g":255,"b":255,"x":1,"y":5},{"age":1,"r":255,"g":255,"b":255,"x":1,"y":6},{"age":1,"r":255,"g":255,"b":255,"x":2,"y":5},{"age":1,"r":255,"g":255,"b":255,"x":2,"y":6},{"age":1,"r":101,"g":38,"b":181,"x":7,"y":22},{"age":1,"r":101,"g":38,"b":181,"x":7,"y":23},{"age":1,"r":101,"g":38,"b":181,"x":7,"y":24},{"age":1,"r":170,"g":63,"b":67,"x":7,"y":28},{"age":1,"r":170,"g":63,"b":67,"x":7,"y":29},{"age":1,"r":170,"g":63,"b":67,"x":7,"y":30},{"age":1,"r":101,"g":38,"b":181,"x":9,"y":20},{"age":1,"r":199,"g":152,"b":139,"x":9,"y":25},{"age":1,"r":249,"g":0,"b":154,"x":9,"y":27},{"age":1,"r":170,"g":63,"b":67,"x":9,"y":32},{"age":1,"r":101,"g":38,"b":181,"x":10,"y":20},{"age":1,"r":199,"g":152,"b":139,"x":10,"y":25},{"age":1,"r":249,"g":0,"b":154,"x":10,"y":27},{"age":1,"r":170,"g":63,"b":67,"x":10,"y":32},{"age":1,"r":0,"g":0,"b":0,"x":11,"y":5},{"age":1,"r":0,"g":0,"b":0,"x":11,"y":6},{"age":1,"r":0,"g":0,"b":0,"x":11,"y":7},{"age":1,"r":101,"g":38,"b":181,"x":11,"y":20},{"age":1,"r":199,"g":152,"b":139,"x":11,"y":25},{"age":1,"r":249,"g":0,"b":154,"x":11,"y":27},{"age":1,"r":170,"g":63,"b":67,"x":11,"y":32},{"age":1,"r":0,"g":0,"b":0,"x":12,"y":4},{"age":1,"r":0,"g":0,"b":0,"x":12,"y":8},{"age":1,"r":199,"g":152,"b":139,"x":12,"y":22},{"age":1,"r":199,"g":152,"b":139,"x":12,"y":23},{"age":1,"r":199,"g":152,"b":139,"x":12,"y":24},{"age":1,"r":249,"g":0,"b":154,"x":12,"y":28},{"age":1,"r":249,"g":0,"b":154,"x":12,"y":29},{"age":1,"r":249,"g":0,"b":154,"x":12,"y":30},{"age":1,"r":0,"g":0,"b":0,"x":13,"y":3},{"age":1,"r":0,"g":0,"b":0,"x":13,"y":9},{"age":1,"r":0,"g":0,"b":0,"x":14,"y":3},{"age":1,"r":0,"g":0,"b":0,"x":14,"y":9},{"age":1,"r":156,"g":171,"b":2,"x":14,"y":22},{"age":1,"r":156,"g":171,"b":2,"x":14,"y":23},{"age":1,"r":156,"g":171,"b":2,"x":14,"y":24},{"age":1,"r":28,"g":194,"b":52,"x":14,"y":28},{"age":1,"r":28,"g":194,"b":52,"x":14,"y":29},{"age":1,"r":28,"g":194,"b":52,"x":14,"y":30},{"age":1,"r":0,"g":0,"b":0,"x":15,"y":6},{"age":1,"r":5,"g":64,"b":168,"x":15,"y":20},{"age":1,"r":156,"g":171,"b":2,"x":15,"y":25},{"age":1,"r":28,"g":194,"b":52,"x":15,"y":27},{"age":1,"r":225,"g":150,"b":185,"x":15,"y":32},{"age":1,"r":0,"g":0,"b":0,"x":16,"y":4},{"age":1,"r":0,"g":0,"b":0,"x":16,"y":8},{"age":1,"r":5,"g":64,"b":168,"x":16,"y":20},{"age":1,"r":156,"g":171,"b":2,"x":16,"y":25},{"age":1,"r":28,"g":194,"b":52,"x":16,"y":27},{"age":1,"r":225,"g":150,"b":185,"x":16,"y":32},{"age":1,"r":0,"g":0,"b":0,"x":17,"y":5},{"age":1,"r":0,"g":0,"b":0,"x":17,"y":6},{"age":1,"r":0,"g":0,"b":0,"x":17,"y":7},{"age":1,"r":5,"g":64,"b":168,"x":17,"y":20},{"age":1,"r":156,"g":171,"b":2,"x":17,"y":25},{"age":1,"r":28,"g":194,"b":52,"x":17,"y":27},{"age":1,"r":225,"g":150,"b":185,"x":17,"y":32},{"age":1,"r":0,"g":0,"b":0,"x":18,"y":6},{"age":1,"r":5,"g":64,"b":168,"x":19,"y":22},{"age":1,"r":5,"g":64,"b":168,"x":19,"y":23},{"age":1,"r":5,"g":64,"b":168,"x":19,"y":24},{"age":1,"r":225,"g":150,"b":185,"x":19,"y":28},{"age":1,"r":225,"g":150,"b":185,"x":19,"y":29},{"age":1,"r":225,"g":150,"b":185,"x":19,"y":30},{"age":1,"r":255,"g":255,"b":255,"x":21,"y":3},{"age":1,"r":255,"g":255,"b":255,"x":21,"y":4},{"age":1,"r":255,"g":255,"b":255,"x":21,"y":5},{"age":1,"r":255,"g":255,"b":255,"x":22,"y":3},{"age":1,"r":255,"g":255,"b":255,"x":22,"y":4},{"age":1,"r":255,"g":255,"b":255,"x":22,"y":5},{"age":1,"r":255,"g":255,"b":255,"x":23,"y":2},{"age":1,"r":255,"g":255,"b":255,"x":23,"y":6},{"age":1,"r":255,"g":255,"b":255,"x":25,"y":1},{"age":1,"r":255,"g":255,"b":255,"x":25,"y":2},{"age":1,"r":255,"g":255,"b":255,"x":25,"y":6},{"age":1,"r":255,"g":255,"b":255,"x":25,"y":7},{"age":1,"r":0,"g":0,"b":0,"x":35,"y":3},{"age":1,"r":0,"g":0,"b":0,"x":35,"y":4},{"age":1,"r":0,"g":0,"b":0,"x":36,"y":3},{"age":1,"r":0,"g":0,"b":0,"x":36,"y":4}]
+      var canvas = document.querySelector('#canvas');
 
-      var preset =  [{"life":1,"r":255,"g":255,"b":255,"x":1,"y":5},{"life":1,"r":255,"g":255,"b":255,"x":1,"y":6},{"life":1,"r":255,"g":255,"b":255,"x":2,"y":5},{"life":1,"r":255,"g":255,"b":255,"x":2,"y":6},{"life":1,"r":101,"g":38,"b":181,"x":7,"y":22},{"life":1,"r":101,"g":38,"b":181,"x":7,"y":23},{"life":1,"r":101,"g":38,"b":181,"x":7,"y":24},{"life":1,"r":170,"g":63,"b":67,"x":7,"y":28},{"life":1,"r":170,"g":63,"b":67,"x":7,"y":29},{"life":1,"r":170,"g":63,"b":67,"x":7,"y":30},{"life":1,"r":101,"g":38,"b":181,"x":9,"y":20},{"life":1,"r":199,"g":152,"b":139,"x":9,"y":25},{"life":1,"r":249,"g":0,"b":154,"x":9,"y":27},{"life":1,"r":170,"g":63,"b":67,"x":9,"y":32},{"life":1,"r":101,"g":38,"b":181,"x":10,"y":20},{"life":1,"r":199,"g":152,"b":139,"x":10,"y":25},{"life":1,"r":249,"g":0,"b":154,"x":10,"y":27},{"life":1,"r":170,"g":63,"b":67,"x":10,"y":32},{"life":1,"r":0,"g":0,"b":0,"x":11,"y":5},{"life":1,"r":0,"g":0,"b":0,"x":11,"y":6},{"life":1,"r":0,"g":0,"b":0,"x":11,"y":7},{"life":1,"r":101,"g":38,"b":181,"x":11,"y":20},{"life":1,"r":199,"g":152,"b":139,"x":11,"y":25},{"life":1,"r":249,"g":0,"b":154,"x":11,"y":27},{"life":1,"r":170,"g":63,"b":67,"x":11,"y":32},{"life":1,"r":0,"g":0,"b":0,"x":12,"y":4},{"life":1,"r":0,"g":0,"b":0,"x":12,"y":8},{"life":1,"r":199,"g":152,"b":139,"x":12,"y":22},{"life":1,"r":199,"g":152,"b":139,"x":12,"y":23},{"life":1,"r":199,"g":152,"b":139,"x":12,"y":24},{"life":1,"r":249,"g":0,"b":154,"x":12,"y":28},{"life":1,"r":249,"g":0,"b":154,"x":12,"y":29},{"life":1,"r":249,"g":0,"b":154,"x":12,"y":30},{"life":1,"r":0,"g":0,"b":0,"x":13,"y":3},{"life":1,"r":0,"g":0,"b":0,"x":13,"y":9},{"life":1,"r":0,"g":0,"b":0,"x":14,"y":3},{"life":1,"r":0,"g":0,"b":0,"x":14,"y":9},{"life":1,"r":156,"g":171,"b":2,"x":14,"y":22},{"life":1,"r":156,"g":171,"b":2,"x":14,"y":23},{"life":1,"r":156,"g":171,"b":2,"x":14,"y":24},{"life":1,"r":28,"g":194,"b":52,"x":14,"y":28},{"life":1,"r":28,"g":194,"b":52,"x":14,"y":29},{"life":1,"r":28,"g":194,"b":52,"x":14,"y":30},{"life":1,"r":0,"g":0,"b":0,"x":15,"y":6},{"life":1,"r":5,"g":64,"b":168,"x":15,"y":20},{"life":1,"r":156,"g":171,"b":2,"x":15,"y":25},{"life":1,"r":28,"g":194,"b":52,"x":15,"y":27},{"life":1,"r":225,"g":150,"b":185,"x":15,"y":32},{"life":1,"r":0,"g":0,"b":0,"x":16,"y":4},{"life":1,"r":0,"g":0,"b":0,"x":16,"y":8},{"life":1,"r":5,"g":64,"b":168,"x":16,"y":20},{"life":1,"r":156,"g":171,"b":2,"x":16,"y":25},{"life":1,"r":28,"g":194,"b":52,"x":16,"y":27},{"life":1,"r":225,"g":150,"b":185,"x":16,"y":32},{"life":1,"r":0,"g":0,"b":0,"x":17,"y":5},{"life":1,"r":0,"g":0,"b":0,"x":17,"y":6},{"life":1,"r":0,"g":0,"b":0,"x":17,"y":7},{"life":1,"r":5,"g":64,"b":168,"x":17,"y":20},{"life":1,"r":156,"g":171,"b":2,"x":17,"y":25},{"life":1,"r":28,"g":194,"b":52,"x":17,"y":27},{"life":1,"r":225,"g":150,"b":185,"x":17,"y":32},{"life":1,"r":0,"g":0,"b":0,"x":18,"y":6},{"life":1,"r":5,"g":64,"b":168,"x":19,"y":22},{"life":1,"r":5,"g":64,"b":168,"x":19,"y":23},{"life":1,"r":5,"g":64,"b":168,"x":19,"y":24},{"life":1,"r":225,"g":150,"b":185,"x":19,"y":28},{"life":1,"r":225,"g":150,"b":185,"x":19,"y":29},{"life":1,"r":225,"g":150,"b":185,"x":19,"y":30},{"life":1,"r":255,"g":255,"b":255,"x":21,"y":3},{"life":1,"r":255,"g":255,"b":255,"x":21,"y":4},{"life":1,"r":255,"g":255,"b":255,"x":21,"y":5},{"life":1,"r":255,"g":255,"b":255,"x":22,"y":3},{"life":1,"r":255,"g":255,"b":255,"x":22,"y":4},{"life":1,"r":255,"g":255,"b":255,"x":22,"y":5},{"life":1,"r":255,"g":255,"b":255,"x":23,"y":2},{"life":1,"r":255,"g":255,"b":255,"x":23,"y":6},{"life":1,"r":255,"g":255,"b":255,"x":25,"y":1},{"life":1,"r":255,"g":255,"b":255,"x":25,"y":2},{"life":1,"r":255,"g":255,"b":255,"x":25,"y":6},{"life":1,"r":255,"g":255,"b":255,"x":25,"y":7},{"life":1,"r":0,"g":0,"b":0,"x":35,"y":3},{"life":1,"r":0,"g":0,"b":0,"x":35,"y":4},{"life":1,"r":0,"g":0,"b":0,"x":36,"y":3},{"life":1,"r":0,"g":0,"b":0,"x":36,"y":4}]
-
-      var defaults = {
+      var options = {
+        canvas: canvas,
         preset: preset,
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: 50,
+        height: 50,
         interactive: true,
         speed: 100,
         cellSize: 10,
-        opacity: true,
-        state: 'Play',
+        opacity: false,
         inheritColors: true,
-        boardColor: 'Dark Mode',
-        cellColor: '#FFF'
+        running: false,
+        borderColor: '#333',
+        cellColor: '#FF0000'
       };
 
-      var gol = new GoL(defaults, '#canvas');
+      var gol = new GoL(options);
 
     </script>
     <script src="bind.js"></script>

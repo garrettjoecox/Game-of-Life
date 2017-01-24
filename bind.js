@@ -8,215 +8,194 @@ Element.prototype.on = function(event, callback) {
   return this;
 }
 
-var $body = $('body');
-var $canvas = $('#canvas');
-var $configB = $('#configButton');
-var $configM = $('#configMenu');
-var $stateB = $('#stateButton');
-var $resetB = $('#resetButton');
-var $speedS = $('#speedSlider');
-var $widthMB = $('#widthMinusButton');
-var $widthI = $('#widthInput');
-var $widthAB = $('#widthAddButton');
-var $heightMB = $('#heightMinusButton');
-var $heightI = $('#heightInput');
-var $heightAB = $('#heightAddButton');
-var $cellSizeMB = $('#cellSizeMinusButton');
-var $cellSizeI = $('#cellSizeInput');
-var $cellSizeAB = $('#cellSizeAddButton');
-var $brushColorI = $('#brushColorInput');
-var $boardColorB = $('#boardColorButton');
-var $opacityB = $('#opacityButton');
-var $colorsB = $('#colorsButton');
-var $mouseB = $('#mouseButton');
-var $saveB = $('#saveButton');
-var $defaultB = $('#defaultButton');
+const $body = $('body');
+const $canvas = $('#canvas');
 
 // Config Button
 
-$configB.on('click', function() {
-  $configM.classList.toggle('open');
-  this.classList.toggle('open');
+const $cog = $('.cogContainer');
+const $config = $('.configContainer');
+
+$cog.on('click', function() {
+  $config.classList.toggle('open');
 });
 
 // Playback Buttons
 
-$stateB.value = gol.options.state === 'Play' ? 'Pause' : 'Play';
+const $runningB = $('#runningButton');
+const $stepB = $('#stepButton');
+const $resetB = $('#resetButton');
 
-$stateB.on('click', function() {
-  gol.options.state = this.value;
-  this.value = this.value === 'Play' ? 'Pause' : 'Play';
+$runningB.value = gol.options.running ? 'Pause' : 'Play';
+
+$runningB.on('click', () => {
+  if ($runningB.value === 'Play') {
+    gol.options.running = true;
+    $runningB.value = 'Pause';
+  } else {
+    gol.options.running = false;
+    $runningB.value = 'Play';
+  }
 });
 
-$resetB.on('click', function() {
-  gol.init();
-});
+$stepB.on('click', () => gol.step());
+
+$resetB.on('click', () => gol.init());
 
 // Speed Slider
 
+const $speedS = $('#speedSlider');
+
 $speedS.value = gol.options.speed;
 
-$speedS.on('input', function() {
-  gol.options.speed = this.value;
-});
+$speedS.on('input', () => gol.options.speed = $speedS.value);
 
 // Width Buttons
 
-$widthI.value = gol.options.widthCells;
+const $widthSB = $('#widthSButton');
+const $widthAB = $('#widthAButton');
+const $widthI = $('#widthInput');
 
-$widthI.on('input', function() {
-  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
+$widthI.value = gol.options.width;
 
-  if (this.value > maxW) this.value = maxW;
-  gol.options.widthCells = this.value;
+$widthI.on('change', () => {
+  gol.options.width = $widthI.value = Math.max(1, Math.min(Math.floor(window.innerWidth / gol.options.cellSize), $widthI.value)) || 1;
   gol.init();
 });
 
-$widthMB.on('click', function() {
-  gol.options.widthCells = $widthI.value-= 1;
+$widthSB.on('click', () => {
+  gol.options.width = $widthI.value = Math.max($widthI.value - 1, 1);
   gol.init();
 });
 
-$widthAB.on('click', function() {
-  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
-  var newW = +$widthI.value + 1;
-
-  if (newW > maxW) return;
-  gol.options.widthCells = $widthI.value = newW;
+$widthAB.on('click', () => {
+  gol.options.width = $widthI.value = Math.min(+$widthI.value + 1, Math.floor(window.innerWidth / gol.options.cellSize));
   gol.init();
 });
 
 // Height Buttons
 
-$heightI.value = gol.options.heightCells;
+const $heightSB = $('#heightSButton');
+const $heightAB = $('#heightAButton');
+const $heightI = $('#heightInput');
 
-$heightI.on('input', function() {
-  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+$heightI.value = gol.options.height;
 
-  if (this.value > maxH) this.value = maxH;
-  gol.options.heightCells = this.value;
+$heightI.on('change', () => {
+  gol.options.height = $heightI.value = Math.max(1, Math.min(Math.floor(window.innerHeight / gol.options.cellSize), $heightI.value)) || 1;
   gol.init();
 });
 
-$heightMB.on('click', function() {
-  gol.options.heightCells = $heightI.value-= 1;
+$heightSB.on('click', () => {
+  gol.options.height = $heightI.value = Math.max($heightI.value - 1, 1);
   gol.init();
 });
 
-$heightAB.on('click', function() {
-  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
-  var newH = +$heightI.value + 1;
-
-  if (newH > maxH) return;
-  gol.options.heightCells = $heightI.value = newH;
+$heightAB.on('click', () => {
+  gol.options.height = $heightI.value = Math.min(+$heightI.value + 1, Math.floor(window.innerHeight / gol.options.cellSize));
   gol.init();
 });
 
 // Cell Size Buttons
 
+const $cellSizeSB = $('#cellSizeSButton');
+const $cellSizeAB = $('#cellSizeAButton');
+const $cellSizeI = $('#cellSizeInput');
+
 $cellSizeI.value = gol.options.cellSize;
 
-$cellSizeI.on('change', function() {
-  gol.options.cellSize = this.value;
-  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
-  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+$cellSizeI.on('change', () => {
+  gol.options.cellSize = $cellSizeI.value = Math.max(1, $cellSizeI.value) || 1;
+  gol.options.width = $widthI.value = Math.max(1, Math.min(Math.floor(window.innerWidth / gol.options.cellSize), $widthI.value)) || 1;
+  gol.options.height = $heightI.value = Math.max(1, Math.min(Math.floor(window.innerHeight / gol.options.cellSize), $heightI.value)) || 1;
 
-  if ($widthI.value > maxW) {
-    $widthI.value = maxW;
-    gol.options.widthCells = maxW;
-  }
-  if ($heightI.value > maxH) {
-    $heightI.value = maxH;
-    gol.options.heightCells = maxH;
-  }
   gol.init();
 });
 
-$cellSizeMB.on('click', function() {
-  gol.options.cellSize = $cellSizeI.value-= 1;
+$cellSizeSB.on('click', () => {
+  gol.options.cellSize = $cellSizeI.value = Math.max(1, $cellSizeI.value - 1) || 1;
   gol.init();
 });
 
-$cellSizeAB.on('click', function() {
-  gol.options.cellSize = $cellSizeI.value = (+$cellSizeI.value + 1);
-  var maxW = Math.floor(window.innerWidth / gol.options.cellSize);
-  var maxH = Math.floor(window.innerHeight / gol.options.cellSize);
+$cellSizeAB.on('click', () => {
+  gol.options.cellSize = $cellSizeI.value = Math.max(1, +$cellSizeI.value + 1) || 1;
+  gol.options.width = $widthI.value = Math.max(1, Math.min(Math.floor(window.innerWidth / gol.options.cellSize), $widthI.value)) || 1;
+  gol.options.height = $heightI.value = Math.max(1, Math.min(Math.floor(window.innerHeight / gol.options.cellSize), $heightI.value)) || 1;
 
-  if ($widthI.value > maxW) {
-    $widthI.value = maxW;
-    gol.options.widthCells = maxW;
-  }
-  if ($heightI.value > maxH) {
-    $heightI.value = maxH;
-    gol.options.heightCells = maxH;
-  }
   gol.init();
 });
 
 // Brush/Cell Color Input
 
-$brushColorI.value = gol.options.cellColor;
+const $cellColorT = $('#cellColorTitle');
+const $cellColorI = $('#cellColorInput');
 
-$brushColorI.on('input', function() {
-  gol.options.brush = hexToRgb(this.value);
-  gol.render();
+$cellColorI.value = gol.options.cellColor;
+
+$cellColorI.on('input', () => {
+  gol.options.brush = hexToRgb($cellColorI.value);
+  gol.redraw();
 });
 
-// Board Color Button
+// Board Theme Buttons
 
-$boardColorB.value = gol.options.boardColor === 'Dark Mode' ? 'Light Mode' : 'Dark Mode';
-if (gol.options.boardColor === 'Dark Mode') $body.classList.add('dark');
+const $lightB = $('#lightThemeButton');
+const $darkB = $('#darkThemeButton');
 
-$boardColorB.on('click', function() {
-  gol.options.boardColor = this.value;
-  this.value = this.value === 'Dark Mode' ? 'Light Mode' : 'Dark Mode';
-  $body.classList.toggle('dark');
-  gol.render();
+$lightB.on('click', () => {
+  $body.classList.remove('dark');
+  $darkB.classList.remove('active');
+  $lightB.classList.add('active');
+  gol.options.borderColor = '#EEE';
+
+  gol.redraw();
 });
 
-// Opacity Button
+$darkB.on('click', () => {
+  $body.classList.add('dark');
+  $lightB.classList.remove('active');
+  $darkB.classList.add('active');
+  gol.options.borderColor = '#333';
+
+  gol.redraw();
+});
+
+// Toggles Buttons
+
+const $opacityB = $('#opacityButton');
+const $colorsB = $('#colorsButton');
+const $mouseB = $('#mouseButton');
 
 if (gol.options.opacity) $opacityB.classList.add('active');
-
-$opacityB.on('click', function() {
-  gol.options.opacity = !gol.options.opacity;
-  this.classList.toggle('active');
-  gol.render();
-});
-
-// Colors Button
-
 if (gol.options.inheritColors) $colorsB.classList.add('active');
-$('#colorTitle').innerText = gol.options.inheritColors ? 'Brush Color' : 'Cell Color';
+if (gol.options.interactive) $mouseB.classList.add('active');
 
-$colorsB.on('click', function() {
+$opacityB.on('click', () => {
+  gol.options.opacity = !gol.options.opacity;
+  $opacityB.classList.toggle('active');
+  gol.redraw();
+});
+
+$colorsB.on('click', () => {
   gol.options.inheritColors = !gol.options.inheritColors;
-  this.classList.toggle('active');
-  $('#colorTitle').innerText = gol.options.inheritColors ? 'Brush Color' : 'Cell Color';
-  gol.render();
+  $cellColorT.innerText = gol.options.inheritColors ? 'Brush Color' : 'Cell Color';
+  $colorsB.classList.toggle('active');
+  gol.redraw();
 });
 
-// Mouse Button
-
-if (gol.options.interactive) {
-  $mouseB.classList.add('active');
-  $canvas.classList.add('pointer');
-}
-
-$mouseB.on('click', function() {
+$mouseB.on('click', () => {
   gol.options.interactive = !gol.options.interactive;
-  this.classList.toggle('active');
-  $canvas.classList.toggle('pointer');
+  $mouseB.classList.toggle('active');
 });
 
-// Save Button
+// // Save Button
 
-$saveB.on('click', function() {
-  gol.save();
-});
+// $saveB.on('click', function() {
+//   gol.save();
+// });
 
-// Default Button
+// // Default Button
 
-$defaultB.on('click', function() {
-  gol.defaults();
-});
+// $defaultB.on('click', function() {
+//   gol.defaults();
+// });
